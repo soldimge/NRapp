@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Page1Form.ui.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>images/logog.png</file>
+        <file>images/logoit.png</file>
+        <file>images/wus.jpg</file>
+        <file>images/mm.jpg</file>
+        <file>images/fb.png</file>
+        <file>images/instagram.png</file>
+        <file>images/viber.png</file>
+        <file>images/vk.png</file>
+    </qresource>
+</RCC>
