@@ -1,3 +1,3 @@
 # NRapp
 Client for online radio.
-![alt text](images/logoit.png "Описание будет тут")
+![alt text](screenshots/Screenshot (1).jpg "Описание будет тут")
