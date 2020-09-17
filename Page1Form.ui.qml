@@ -94,38 +94,6 @@ Page {
         }
     }
 
-//    ComboBox {
-//        id: comboBox
-//        height: rectangle.height
-//        displayText: "В Эфире"
-//        font.pointSize: 25
-//        flat: true
-//        currentIndex: 0
-//        anchors.right: parent.right
-//        anchors.top: rectangle.bottom
-//        anchors.left: parent.left
-//        model: ListModel
-//        {
-//            id: model
-//            ListElement
-//            {
-//                text: "В Эфире"
-//            }
-//            ListElement {
-//                text: "Top 100"
-//            }
-//            ListElement {
-//                text: "MegaMix"
-//            }
-//            ListElement {
-//                text: "Fresh"
-//            }
-//            ListElement {
-//                text: "Wake Up Show"
-//            }
-//        }
-//    }
-
     Image {
         id: image1
         fillMode: Image.PreserveAspectFit
