@@ -21,14 +21,9 @@ public:
     ~AppCoreDim();
     Q_INVOKABLE void but_click(short);
     Q_INVOKABLE void retry();
-    void findPic();
-    void work();
-    QNetworkAccessManager* manager;
-    void setNotification(const QString &notification);
-    QString notification() const;
-    void cancel();
 
 private:
+    QNetworkAccessManager* manager;
     QTimer* tmr;
     QUrl urlUser;
     QString song1;
@@ -38,6 +33,11 @@ private:
     short song_num;
     short id;
     QString m_notification;
+    void findPic();
+    void work();
+    void setNotification(const QString &notification);
+    QString notification() const;
+    void cancel();
 
 signals:
     // Сигнал для передачи данных в qml-интерфейс

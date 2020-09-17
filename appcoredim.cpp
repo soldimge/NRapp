@@ -165,10 +165,6 @@ void AppCoreDim::picReplyFinished()
     }
     if (temp != pic1)
         emit sendToQml_pic(pic1);
-//    else
-//    {
-//        qDebug() << reply->errorString();
-//    }
     reply->deleteLater();
 }
 
