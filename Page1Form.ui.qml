@@ -1,12 +1,13 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtAndroidTools 1.0
 
 Page {
     width: 768
     height: 1024
     property alias comboBox: comboBox
     property alias button: button
-    property alias image: image
+//    property alias image: image
     property alias image1: image1
     property alias image2: image2
     property alias roundButton1: roundButton1
@@ -23,6 +24,7 @@ Page {
     property alias butMit4FB: butMit4FB
     property alias butMit4VB: butMit4VB
     property alias tButtonBack: tButtonBack
+    property alias banner1: banner1
 
     Rectangle {
         id: rectangle1
@@ -32,14 +34,22 @@ Page {
         anchors.top: comboBox.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
+        QtAndroidAdMobBanner {
+            id: banner1
+            anchors.fill: parent
+            unitId: "ca-app-pub-3166358032711654/6170347050"
+            type: QtAndroidAdMobBanner.TYPE_SMART_BANNER
+            keywords: ["keyword_1", "keyword_2", "keyword_3"]
+        }
     }
 
     Image {
         id: image2
         fillMode: Image.PreserveAspectFit
-        anchors.top: rectangle3.bottom
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+//        height: width
         source: "qrc:/images/logog.png"
     }
 
@@ -56,7 +66,9 @@ Page {
             color: "#121c2f"
             border.width: 0
         }
-        model: ["В Эфире", "Top 100", "MegaMix", "Fresh", "Wake Up Show"]
+        model: ["Новое Радио", "Радио Unistar", "Русское Радио", "Energy FM", "Радио РОКС",
+                "Мелодии Века", "Радыё Relax", "Душевное Радио", "Радиус FM", "Радио Би-Эй",
+                "Легенды FM"]
 
         delegate: ItemDelegate {
             width: comboBox.width
@@ -97,12 +109,11 @@ Page {
     Image {
         id: image1
         fillMode: Image.PreserveAspectFit
-        anchors.top: rectangle3.bottom
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         source: "qrc:/images/logog.png"
     }
-
 
     Rectangle {
         id: rectangle2
@@ -114,50 +125,23 @@ Page {
     }
 
     Connections {
-            target: backEnd // Указываем целевое соединение
-            /* Объявляем и реализуем функцию, как параметр
-             * объекта и с имененем похожим на название сигнала
-             * Разница в том, что добавляем в начале on и далее пишем
-             * с заглавной буквы
-             * */
+            target: backEnd
+
             onNetError: {
                 dialNoConnection.visible = true
             }
             onSendToQml: {
-                if (comboBox.currentIndex == 0)
+                if (comboBox.currentIndex != 4)
                 {
-                    if (song1 != "")
-                        text1.text = song1
-                    else
-                        text1.text = "В Эфире"
+                    if (song != "")
+                        text1.text = song
                 }
-                else if (comboBox.currentIndex == 1)
-                {
-                    if (song2 != "")
-                        text1.text = song2
-                    else
-                        text1.text = "Top 100"
-                }
-                else if (comboBox.currentIndex == 2)
-                {
-                    text1.text = "MegaMix"
-                    image1.source = "images/mm.jpg"
-                }
-                else if (comboBox.currentIndex == 3)
-                {
-                    if (song4 != "")
-                        text1.text = song4
-                    else
-                        text1.text = "Fresh"
-                }
-                else if (comboBox.currentIndex == 4)
-                {
-                    text1.text = "Wake Up Show"
-                    image1.source = "images/wus.jpg"
-                }
+                else
+                    text1.text = comboBox.model[comboBox.currentIndex]
             }
             onSendToQml_pic: {
-                    image1.source = pic1
+                banner1.show()
+                image1.source = pic1
             }
         }
 
@@ -180,13 +164,13 @@ Page {
         anchors.top: parent.top
         anchors.left: parent.left
         height: roundButton1.height / 2
-        color: "#16a251"
+        color: "#61181a1f"
         border.width: 0
     }
 
     Label {
         id: text1
-        color: "#16a251"
+        color: "#ffffff"
         text: "В эфире"
         horizontalAlignment: Text.AlignHCenter
         font.pointSize: 14
@@ -211,15 +195,14 @@ Page {
         autoExclusive: false
     }
 
-    Image {
-        id: image
-        anchors.top: rectangle3.top
-        anchors.left: rectangle3.left
-        anchors.bottom: rectangle3.bottom
-        fillMode: Image.PreserveAspectFit
-        source: "images/logoit.png"
-    }
-
+//    Image {
+//        id: image
+//        anchors.top: rectangle3.top
+//        anchors.left: rectangle3.left
+//        anchors.bottom: rectangle3.bottom
+//        fillMode: Image.PreserveAspectFit
+//        source: "images/logoit.png"
+//    }
 
     Text {
         id: element
@@ -267,6 +250,7 @@ Page {
         id: button
         anchors.top: rectangle3.top
         anchors.bottom: rectangle3.bottom
+//        flat: false
         anchors.right: parent.right
 //        icon.name: "menu"
         Text {
@@ -278,7 +262,7 @@ Page {
             font.pointSize: 36
             color: "#ffffff"
         }
-        highlighted: true
+//        highlighted: true
         font.pointSize: 28
     }
 
@@ -405,3 +389,9 @@ Page {
 
 //#44aa3f
 //#0b0d12
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.6600000262260437}
+}
+##^##*/

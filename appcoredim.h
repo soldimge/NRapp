@@ -26,12 +26,9 @@ private:
     QNetworkAccessManager* manager;
     QTimer* tmr;
     QUrl urlUser;
-    QString song1;
-    QString song2;
-    QString song4;
+    QString song;
     QString pic1;
-    short song_num;
-    short id;
+    qint16 id;
     QString m_notification;
     void findPic();
     void work();
@@ -40,9 +37,7 @@ private:
     void cancel();
 
 signals:
-    // Сигнал для передачи данных в qml-интерфейс
-    void sendToQml(QString song1, QString song2, QString song4);
-    void sendToQml_ID(short id);
+    void sendToQml(QString song);
     void sendToQml_pic(QString pic1);
     void notificationChanged();
     void netError();

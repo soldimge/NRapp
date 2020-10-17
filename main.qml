@@ -94,46 +94,28 @@ ApplicationWindow {
         id: swipeView
         anchors.fill: parent
         Page1Form {
+            states: [
+                    State { name: "https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio" },
+                    State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },
+                    State { name: "https://stream.hoster.by/rusradio/russkoe/icecast.audio" },
+                    State { name: "https://stream2.datacenter.by/energy" },
+                    State { name: "http://de.streams.radioplayer.by:8000/live" },
+                    State { name: "http://93.84.112.253:8010/MV128" },
+                    State { name: "http://live.humorfm.by:8000/radiorelax" },
+                    State { name: "https://stream.hoster.by/pilotfm/audio/icecast.audio" },
+                    State { name: "https://video.tvr.by:8443/radiusfm" },
+                    State { name: "http://93.125.106.180:8000/BA128" },
+                    State { name: "http://live.legendy.by:8000/legendyfm" }
+                ]
             comboBox.onActivated:
             {
                 roundButton1.text = "||"
                 roundButton1.leftPadding = 12
                 roundButton1.font.pointSize = 34
-                if(comboBox.currentIndex == 0)
-                {
-                    comboBox.displayText = "В Эфире"
-                    webView.url = "https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio"
-                    backEnd.but_click(1)
-                    text1.text = "В Эфире"
-                }
-                else if(comboBox.currentIndex == 1)
-                {
-                    comboBox.displayText = "Top 100"
-                    webView.url = "https://live.novoeradio.by:444/live/novoeradio_TOP100_aac128/icecast.audio"
-                    backEnd.but_click(2)
-                    text1.text = "Top 100"
-                }
-                else if(comboBox.currentIndex == 2)
-                {
-                    comboBox.displayText = "MegaMix"
-                    webView.url = "https://live.novoeradio.by:444/live/novoeradio_megamix_aac128/icecast.audio"
-                    backEnd.but_click(3)
-                    text1.text = "MegaMix"
-                }
-                else if(comboBox.currentIndex == 3)
-                {
-                    comboBox.displayText = "Fresh"
-                    webView.url = "https://live.novoeradio.by:444/live/novoeradio_fresh_aac128/icecast.audio"
-                    backEnd.but_click(4)
-                    text1.text = "Fresh"
-                }
-                else if(comboBox.currentIndex == 4)
-                {
-                    comboBox.displayText = "Wake Up Show"
-                    webView.url = "https://live.novoeradio.by:444/live/novoeradio_wakeupshow_aac128/icecast.audio"
-                    backEnd.but_click(5)
-                    text1.text = "Wake Up Show"
-                }
+                webView.url = states[comboBox.currentIndex].name
+                comboBox.displayText = comboBox.model[comboBox.currentIndex]
+                backEnd.but_click(comboBox.currentIndex)
+                text1.text = comboBox.displayText
             }
             mit1.onClicked:
             {
@@ -170,43 +152,11 @@ ApplicationWindow {
             {
              if (roundButton1.text == "►")
              {
-                 if(comboBox.currentIndex == 0)
-                 {
-                     comboBox.displayText = "В Эфире"
-                     webView.url = "https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio"
-                     backEnd.but_click(1)
-                     text1.text = "В Эфире"
-                 }
-                 else if(comboBox.currentIndex == 1)
-                 {
-                     comboBox.displayText = "Top 100"
-                     webView.url = "https://live.novoeradio.by:444/live/novoeradio_TOP100_aac128/icecast.audio"
-                     backEnd.but_click(2)
-                     text1.text = "Top 100"
-                 }
-                 else if(comboBox.currentIndex == 2)
-                 {
-                     comboBox.displayText = "MegaMix"
-                     webView.url = "https://live.novoeradio.by:444/live/novoeradio_megamix_aac128/icecast.audio"
-                     backEnd.but_click(3)
-                     text1.text = "MegaMix"
-                 }
-                 else if(comboBox.currentIndex == 3)
-                 {
-                     comboBox.displayText = "Fresh"
-                     webView.url = "https://live.novoeradio.by:444/live/novoeradio_fresh_aac128/icecast.audio"
-                     backEnd.but_click(4)
-                     text1.text = "Fresh"
-                 }
-                 else if(comboBox.currentIndex == 4)
-                 {
-                     comboBox.displayText = "Wake Up Show"
-                     webView.url = "https://live.novoeradio.by:444/live/novoeradio_wakeupshow_aac128/icecast.audio"
-                     backEnd.but_click(5)
-                     text1.text = "Wake Up Show"
-                 }
+                 webView.url = states[comboBox.currentIndex].name
+                 comboBox.displayText = comboBox.model[comboBox.currentIndex]
+                 backEnd.but_click(comboBox.currentIndex)
+                 text1.text = comboBox.displayText
                  roundButton1.text = "||"
-                 backEnd.but_click(comboBox.currentIndex + 1)
                  roundButton1.leftPadding = 12
                  roundButton1.font.pointSize = 34
              }

@@ -4,6 +4,7 @@
 #include <QtQml/QQmlContext>
 #include <QtWebView/QtWebView>
 
+#include "QtAndroidTools.h"
 #include "appcoredim.h"
 
 int main(int argc, char *argv[])
@@ -11,6 +12,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QtWebView::initialize();
     QGuiApplication app(argc, argv);
+
+    QtAndroidTools::initializeQmlTools();
+
     AppCoreDim backEnd;
     QQmlApplicationEngine engine;
     QQmlContext *context = engine.rootContext();
