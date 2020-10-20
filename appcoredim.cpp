@@ -49,30 +49,31 @@ void AppCoreDim::replyFinished()
   if (reply->error() == QNetworkReply::NoError)
   {
       QByteArray content= reply->readAll();
-      QString temp_song = content.data();
-      QString temp_song2 = temp_song;
+      song = content.data();
 
       QRegExp rgx1("</span></td>\\s*.*class=\"ajax\">(.*)</a></td>");
-      rgx1.indexIn(temp_song);
+      QRegExp rgx2("<td>(\\w.*)<");
 
-      QRegExp rgx2("<td>(.*)</td>");
-      rgx2.indexIn(temp_song2);
+      qDebug() << "индекс rgx1" << song.indexOf(rgx1, 0) << "индекс rgx2" << song.indexOf(rgx2, 0);
 
-      if (rgx1.pos(0) < rgx2.pos(0) && rgx1.pos(0)!= -1)
+      if (song.indexOf(rgx1, 0) < song.indexOf(rgx2, 0) && song.indexOf(rgx1, 0)!= -1)
+      {
+          rgx1.indexIn(song);
           song = rgx1.cap(1);
+          song = song.left(song.indexOf("</a></td>"));
+      }
       else
+      {
+          rgx2.indexIn(song);
           song = rgx2.cap(1);
-//      if (song == "")
-//      {
-//          QRegExp rgx("<td>(.*)</td>");
-//          rgx.indexIn(temp_song);
-//          song = rgx.cap(1);
-//      }
+          song = song.left(song.indexOf("</td>"));
+      }
+
       song.replace("&amp;", "&");
       song.replace("&#34", "'");
       song.replace("&#39;", "`");
       song.replace(" - ", "\n");
-      song = song.left(song.indexOf("</a></td>"));
+      song.replace(";", "&");
       song = song.left(song.indexOf("["));
 
       emit sendToQml(song);
@@ -80,13 +81,13 @@ void AppCoreDim::replyFinished()
       switch (id)
       {
         case 4 : m_notification = "Радио РОКС"; break;
+//        case 18 : m_notification = "Центр FM"; break;
         default: m_notification = song; break;
       }
       m_notification.replace("<b>","");
       m_notification.replace("</b>","");
       if (temp != m_notification)
           emit notificationChanged();
-//  }
   }
   else
   {
@@ -104,17 +105,28 @@ void AppCoreDim::updateTime()
         case 0 : urlUser = "https://onlineradiobox.com/by/novoeradio/playlist/"; break;
         case 1 : urlUser = "https://onlineradiobox.com/by/unistar/playlist/"; break;
         case 2 : urlUser = "https://onlineradiobox.com/by/rusradio/playlist/"; break;
+        //4
         case 3 : urlUser = "https://onlineradiobox.com/by/energyfm/playlist/"; break;
-        case 4 : break;
         case 5 : urlUser = "https://onlineradiobox.com/by/melodiiveka/playlist/"; break;
         case 6 : urlUser = "https://onlineradiobox.com/by/radiorelax/playlist/"; break;
         case 7 : urlUser = "https://onlineradiobox.com/by/dushevnoeradio/playlist/"; break;
         case 8 : urlUser = "https://onlineradiobox.com/by/radiys/playlist/"; break;
         case 9 : urlUser = "https://onlineradiobox.com/by/radioba/playlist/"; break;
         case 10 : urlUser = "https://onlineradiobox.com/by/legendy/playlist/"; break;
+        case 11 : urlUser = "https://onlineradiobox.com/by/wgfm/playlist/"; break;
+        case 12 : urlUser = "https://onlineradiobox.com/by/avtoradio/playlist/"; break;
+        case 13 : urlUser = "https://onlineradiobox.com/by/narodnoeradio/playlist/"; break;
+        case 14 : urlUser = "https://onlineradiobox.com/by/humorfm/playlist/"; break;
+        case 15 : urlUser = "https://onlineradiobox.com/by/v4you/playlist/"; break;
+        case 16 : urlUser = "https://onlineradiobox.com/by/pilotfm/playlist/"; break;
+        case 17 : urlUser = "https://onlineradiobox.com/by/aplus/playlist/"; break;
+        //18
+        case 19 : urlUser = "https://onlineradiobox.com/by/s13ru/playlist/"; break;
+        case 20 : urlUser = "https://onlineradiobox.com/by/radiobrest/playlist/"; break;
+        default:  break;
     }
     work();
-    if (id != 4)
+    if (id != 4 && id != 18)
     {
         QString path;
         path = song;

@@ -1,4 +1,4 @@
-QT += qml quick webview network androidextras
+QT += qml quick network androidextras
 
 CONFIG += c++17
 
@@ -19,6 +19,8 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew \
     android/gradlew.bat \
+    android/res/drawable/splash.xml \
+    android/res/drawable/splash_image.png \
     android/src/org/qtproject/example/notification/NotificationClient.java \
     android/res/values/libs.xml
 

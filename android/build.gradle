@@ -18,6 +18,7 @@ apply plugin: 'com.android.application'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
     implementation 'com.google.android.gms:play-services-ads:19.+'
     implementation 'com.google.android.gms:play-services-auth:18.+'
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'

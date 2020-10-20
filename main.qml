@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtWebView 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2
+import QtMultimedia 5.15
 
 ApplicationWindow {
     visible: true
@@ -95,39 +95,42 @@ ApplicationWindow {
         anchors.fill: parent
         Page1Form {
             states: [
-                    State { name: "https://live.novoeradio.by:444/live/novoeradio_aac128/icecast.audio" },
+                    State { name: "http://live.novoeradio.by:8000/novoeradio-128k" },
                     State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },
-                    State { name: "https://stream.hoster.by/rusradio/russkoe/icecast.audio" },
+                    State { name: "http://live.rusradio.by:8000/live" }, //
                     State { name: "https://stream2.datacenter.by/energy" },
-                    State { name: "http://de.streams.radioplayer.by:8000/live" },
+                    State { name: "http://de.streams.radioplayer.by:8000/live" }, //
                     State { name: "http://93.84.112.253:8010/MV128" },
                     State { name: "http://live.humorfm.by:8000/radiorelax" },
-                    State { name: "https://stream.hoster.by/pilotfm/audio/icecast.audio" },
-                    State { name: "https://video.tvr.by:8443/radiusfm" },
+                    State { name: "https://stream.hoster.by/pilotfm/audio/icecast.audio" }, //
+                    State { name: "https://video.tvr.by:8443/radiusfm" }, //
                     State { name: "http://93.125.106.180:8000/BA128" },
-                    State { name: "http://live.legendy.by:8000/legendyfm" }
+                    State { name: "http://live.legendy.by:8000/legendyfm" },
+                    State { name: "https://sv.wargaming.fm/1/128" },
+                    State { name: "http://live.humorfm.by:8000/avtoradio" },
+                    State { name: "https://live.novoeradio.by:444/live/narodnoeradio_aac128/icecast.audio" }, //
+                    State { name: "http://live.humorfm.by:8000/veseloe" },
+                    State { name: "https://a1.radioheart.ru:9003/RH17982" },
+                    State { name: "https://stream.hoster.by/pilotfm/pilot/icecast.audio" }, //
+                    State { name: "https://s.aplus.fm/aplus_128" },
+                    State { name: "https://stream.hoster.by/ont/centerfm/icecast.audio" },
+                    State { name: "https://c28.radioboss.fm:18099/stream" },
+                    State { name: "http://93.84.112.253:8039/stream" }
                 ]
             comboBox.onActivated:
             {
                 roundButton1.text = "||"
                 roundButton1.leftPadding = 12
                 roundButton1.font.pointSize = 34
-                webView.url = states[comboBox.currentIndex].name
+                audioPlayer.source = states[comboBox.currentIndex].name
+                audioPlayer.play()
                 comboBox.displayText = comboBox.model[comboBox.currentIndex]
                 backEnd.but_click(comboBox.currentIndex)
                 text1.text = comboBox.displayText
             }
-            mit1.onClicked:
-            {
-                if(element.visible == false)
-                {
-                    element.visible = true
-                    element2.visible = true
-                    image1.visible = false
-                    image2.visible = false
-                    tButtonBack.visible = true
-                }
-            }
+
+            volumeSlider.onMoved: audioPlayer.volume = volumeSlider.value
+
             tButtonBack.onClicked:
             {
                 element.visible = false
@@ -152,7 +155,8 @@ ApplicationWindow {
             {
              if (roundButton1.text == "►")
              {
-                 webView.url = states[comboBox.currentIndex].name
+                 audioPlayer.source = states[comboBox.currentIndex].name
+                 audioPlayer.play()
                  comboBox.displayText = comboBox.model[comboBox.currentIndex]
                  backEnd.but_click(comboBox.currentIndex)
                  text1.text = comboBox.displayText
@@ -162,7 +166,7 @@ ApplicationWindow {
              }
              else
              {
-                 webView.url = " "
+                 audioPlayer.stop()
                  roundButton1.text = "►"
                  roundButton1.leftPadding = 21
                  roundButton1.font.pointSize = 50
@@ -188,15 +192,13 @@ ApplicationWindow {
         }
     }
 
-    WebView {
-        id: webView
-        anchors.fill: parent
-        visible: false
-        onLoadingChanged: {
-            if (loadRequest.errorString)
-                console.error(loadRequest.errorString);
+    Audio {
+            id: audioPlayer
+            source: " "
+            autoLoad: false
+            autoPlay: true
+            volume: 1
         }
-    }
 }
 
 

@@ -7,13 +7,10 @@ Page {
     height: 1024
     property alias comboBox: comboBox
     property alias button: button
-//    property alias image: image
     property alias image1: image1
     property alias image2: image2
     property alias roundButton1: roundButton1
     property alias text1: text1
-    property alias element: element
-    property alias element2: element2
     property alias menu: menu
     property alias mit1: mit1
     property alias mit2: mit2
@@ -25,23 +22,8 @@ Page {
     property alias butMit4VB: butMit4VB
     property alias tButtonBack: tButtonBack
     property alias banner1: banner1
+    property alias volumeSlider: volumeSlider
 
-    Rectangle {
-        id: rectangle1
-        color: "#0b0d12"
-        border.width: 0
-        anchors.right: parent.right
-        anchors.top: comboBox.bottom
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        QtAndroidAdMobBanner {
-            id: banner1
-            anchors.fill: parent
-            unitId: "ca-app-pub-3166358032711654/6170347050"
-            type: QtAndroidAdMobBanner.TYPE_SMART_BANNER
-            keywords: ["keyword_1", "keyword_2", "keyword_3"]
-        }
-    }
 
     Image {
         id: image2
@@ -68,7 +50,8 @@ Page {
         }
         model: ["Новое Радио", "Радио Unistar", "Русское Радио", "Energy FM", "Радио РОКС",
                 "Мелодии Века", "Радыё Relax", "Душевное Радио", "Радиус FM", "Радио Би-Эй",
-                "Легенды FM"]
+                "Легенды FM", "Wargaming FM", "Авторадио", "Народное Радио", "Юмор FM",
+                "Radio 4you", "Пилот FM", "Radio Aplus", "Центр FM", "Радио s13", "Радио Брест"]
 
         delegate: ItemDelegate {
             width: comboBox.width
@@ -95,7 +78,7 @@ Page {
             x: swipeView.width - width
             y: comboBox.height - height
             leftPadding: 0
-            implicitHeight: contentItem.implicitHeight
+            implicitHeight: rectangle1.y
             padding: 0
             contentItem: ListView {
                 clip: true
@@ -195,57 +178,6 @@ Page {
         autoExclusive: false
     }
 
-//    Image {
-//        id: image
-//        anchors.top: rectangle3.top
-//        anchors.left: rectangle3.left
-//        anchors.bottom: rectangle3.bottom
-//        fillMode: Image.PreserveAspectFit
-//        source: "images/logoit.png"
-//    }
-
-    Text {
-        id: element
-        anchors.top: rectangle3.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: roundButton1.height
-        text: "
-
- Новое Радио — радио современных хитов!
- - это лучшие современные популярные хиты для
- современных людей
- - это бодрое начало дня с командой Wake Up Show
-  и современными хитами
- - это легкость рабочего дня с большим количеством
-  современных хитов без рекламы и разговоров
- - это нескучный вечер после рабочего дня в
- компании современных хитов
- - это современные хиты для отличных выходных"
-        horizontalAlignment: Text.AlignLeft
-        textFormat: Text.AutoText
-        verticalAlignment: Text.AlignTop
-        visible: false
-        font.pointSize: 14
-        color: "#9cbdec"
-    }
-    Text {
-        id: element2
-        anchors.bottom: rectangle.top
-        anchors.left: element.left
-        anchors.right: parent.right
-        height: roundButton1.height
-        text: "
- Учредителем \"Нового Радио\" является Издательский Дом \"Проф-Пресс\" Федерации
- профсоюзов Беларуси.Дочернее радиовещательное унитарное предприятие «Новое радио».
- Свидетельство о государственной регистрации юридического лица: зарегистрировано
- решением Мингорисполкома в Едином государственном регистре юридических лиц и
- индивидуальных предпринимателей 30.01.2014 г. за № 190471246"
-        visible: false
-        font.pointSize: 8
-        color: "#9cbdec"
-    }
-
     ToolButton {
         id: button
         anchors.top: rectangle3.top
@@ -292,7 +224,19 @@ Page {
         y: 0
         MenuItem {
             id: mit1
-            text: "О радио"
+            text: "\nГромкость:       " + Math.round(volumeSlider.value * 100) + "%"
+            height: mit2.height*2
+            Slider {
+                id: volumeSlider
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                orientation: Qt.Horizontal
+                value: 1
+                stepSize : 0.01
+                snapMode : Slider.SnapAlways
+            }
         }
         MenuItem {
             id: mit2
@@ -385,6 +329,24 @@ Page {
         }
     }
 
+    Rectangle {
+        id: rectangle1
+        color: "#000000"
+        border.width: 0
+        anchors.right: parent.right
+        anchors.top: comboBox.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        QtAndroidAdMobBanner {
+            id: banner1
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            unitId: "ca-app-pub-3166358032711654/6170347050"
+            type: QtAndroidAdMobBanner.TYPE_SMART_BANNER
+            keywords: ["keyword_1", "keyword_2", "keyword_3"]
+        }
+    }
 }
 
 //#44aa3f
