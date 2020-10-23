@@ -22,7 +22,7 @@ public class NotificationClient
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                NotificationChannel notificationChannel = new NotificationChannel("NR", "soldimge", importance);
+                NotificationChannel notificationChannel = new NotificationChannel("NR", "playing now info", importance);
                 notificationChannel.setSound(null,null);
                 notificationChannel.enableLights(false);
                 notificationChannel.enableVibration(false);

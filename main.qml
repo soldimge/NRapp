@@ -131,14 +131,6 @@ ApplicationWindow {
 
             volumeSlider.onMoved: audioPlayer.volume = volumeSlider.value
 
-            tButtonBack.onClicked:
-            {
-                element.visible = false
-                element2.visible = false
-                image1.visible = true
-                image2.visible = true
-                tButtonBack.visible = false
-            }
             mit2.onClicked:
             {
                  Qt.openUrlExternally("https://www.novoeradio.by/")

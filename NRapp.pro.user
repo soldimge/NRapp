@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.13.1, 2020-10-15T16:40:01. -->
+<!-- Written by QtCreator 4.13.1, 2020-10-21T18:04:37. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -168,7 +168,7 @@
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">QtProjectManager.QMakeBuildStep</value>
       <value type="QString" key="QtProjectManager.QMakeBuildStep.QMakeArguments"></value>
-      <value type="bool" key="QtProjectManager.QMakeBuildStep.QMakeForced">true</value>
+      <value type="bool" key="QtProjectManager.QMakeBuildStep.QMakeForced">false</value>
       <valuelist type="QVariantList" key="QtProjectManager.QMakeBuildStep.SelectedAbis">
        <value type="QString">armeabi-v7a</value>
        <value type="QString">arm64-v8a</value>
@@ -306,7 +306,15 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.AndroidDeployConfiguration2</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.DeployConfigurationCount">1</value>
-   <valuemap type="QVariantMap" key="ProjectExplorer.Target.PluginSettings"/>
+   <valuemap type="QVariantMap" key="ProjectExplorer.Target.PluginSettings">
+    <valuelist type="QVariantList" key="AndroidDeviceAbis">
+     <value type="QString">arm64-v8a</value>
+     <value type="QString">armeabi-v7a</value>
+     <value type="QString">armeabi</value>
+    </valuelist>
+    <value type="QString" key="AndroidDeviceSerialNumber">97131ce3</value>
+    <value type="int" key="AndroidVersion.ApiLevel">28</value>
+   </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.0">
     <value type="QString" key="Analyzer.Perf.CallgraphMode">dwarf</value>
     <valuelist type="QVariantList" key="Analyzer.Perf.Events">

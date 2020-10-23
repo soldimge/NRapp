@@ -20,7 +20,7 @@ Page {
     property alias butMit4IN: butMit4IN
     property alias butMit4FB: butMit4FB
     property alias butMit4VB: butMit4VB
-    property alias tButtonBack: tButtonBack
+//    property alias tButtonBack: tButtonBack
     property alias banner1: banner1
     property alias volumeSlider: volumeSlider
 
@@ -31,9 +31,18 @@ Page {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-//        height: width
-        source: "qrc:/images/logog.png"
+        source: "images/logo.png"
     }
+
+    Image {
+        id: image1
+        fillMode: Image.PreserveAspectFit
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        source: "images/logo.png"
+    }
+
 
     ComboBox {
         id: comboBox
@@ -89,14 +98,6 @@ Page {
         }
     }
 
-    Image {
-        id: image1
-        fillMode: Image.PreserveAspectFit
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        source: "qrc:/images/logog.png"
-    }
 
     Rectangle {
         id: rectangle2
@@ -146,7 +147,7 @@ Page {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.left: parent.left
-        height: roundButton1.height / 2
+        height: rectangle.height / 2
         color: "#61181a1f"
         border.width: 0
     }
@@ -182,9 +183,8 @@ Page {
         id: button
         anchors.top: rectangle3.top
         anchors.bottom: rectangle3.bottom
-//        flat: false
         anchors.right: parent.right
-//        icon.name: "menu"
+
         Text {
             anchors.centerIn: button
             text: "⋮"
@@ -198,24 +198,24 @@ Page {
         font.pointSize: 28
     }
 
-    ToolButton {
-        id: tButtonBack
-        anchors.top: rectangle3.top
-        anchors.bottom: rectangle3.bottom
-        anchors.right: button.left
-//        anchors.rightMargin: button.width
-        Text {
-            anchors.centerIn: tButtonBack
-            text: "×"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 36
-            color: "#ffffff"
-        }
-        highlighted: true
-        font.pointSize: 28
-        visible: false
-    }
+//    ToolButton {
+//        id: tButtonBack
+//        anchors.top: rectangle3.top
+//        anchors.bottom: rectangle3.bottom
+//        anchors.right: button.left
+////        anchors.rightMargin: button.width
+//        Text {
+//            anchors.centerIn: tButtonBack
+//            text: "×"
+//            horizontalAlignment: Text.AlignHCenter
+//            verticalAlignment: Text.AlignVCenter
+//            font.pointSize: 36
+//            color: "#ffffff"
+//        }
+//        highlighted: true
+//        font.pointSize: 28
+//        visible: false
+//    }
 
     Menu {
         id: menu
