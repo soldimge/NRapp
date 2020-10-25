@@ -12,6 +12,10 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
     tmr->start();
 }
 
+const QAndroidJniObject m_JavaNotification("com/falsinsoft/qtandroidtools/AndroidNotification",
+                   "(Landroid/app/Activity)V",
+                   QtAndroid::androidActivity().object<jobject>());
+
 AppCoreDim::~AppCoreDim()
 {
     cancel();
@@ -76,7 +80,6 @@ void AppCoreDim::replyFinished()
       song.replace(";", "&");
       song = song.left(song.indexOf("["));
 
-      emit sendToQml(song);
       QString temp = m_notification;
       switch (id)
       {
@@ -87,7 +90,10 @@ void AppCoreDim::replyFinished()
       m_notification.replace("<b>","");
       m_notification.replace("</b>","");
       if (temp != m_notification)
+      {
+          emit sendToQml(song);
           emit notificationChanged();
+      }
   }
   else
   {

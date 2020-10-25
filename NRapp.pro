@@ -4,7 +4,8 @@ CONFIG += c++17
 
 DEFINES += \
     QT_DEPRECATED_WARNINGS \
-    QTAT_ADMOB_BANNER
+    QTAT_ADMOB_BANNER\
+    QTAT_NOTIFICATION
 
 SOURCES += main.cpp \
     appcoredim.cpp

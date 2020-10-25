@@ -20,10 +20,19 @@ Page {
     property alias butMit4IN: butMit4IN
     property alias butMit4FB: butMit4FB
     property alias butMit4VB: butMit4VB
-//    property alias tButtonBack: tButtonBack
     property alias banner1: banner1
     property alias volumeSlider: volumeSlider
+    property alias notification1: notification1
 
+    QtAndroidNotification {
+        id: notification1
+        title: "Сейчас в эфире"
+        text: text1.text
+        expandableText: text1.text
+        channelName: "playing now info"
+        smallIconName: "icon"
+        largeIconSource: image1.source
+    }
 
     Image {
         id: image2
@@ -98,7 +107,6 @@ Page {
         }
     }
 
-
     Rectangle {
         id: rectangle2
         color: "#181a1f"
@@ -122,6 +130,11 @@ Page {
                 }
                 else
                     text1.text = comboBox.model[comboBox.currentIndex]
+                notification1.cancel()
+                notification1.largeIconSource = image1.source
+                notification1.text = text1.text
+                notification1.expandableText = text1.text
+                notification1.show()
             }
             onSendToQml_pic: {
                 banner1.show()
@@ -194,28 +207,8 @@ Page {
             font.pointSize: 36
             color: "#ffffff"
         }
-//        highlighted: true
         font.pointSize: 28
     }
-
-//    ToolButton {
-//        id: tButtonBack
-//        anchors.top: rectangle3.top
-//        anchors.bottom: rectangle3.bottom
-//        anchors.right: button.left
-////        anchors.rightMargin: button.width
-//        Text {
-//            anchors.centerIn: tButtonBack
-//            text: "×"
-//            horizontalAlignment: Text.AlignHCenter
-//            verticalAlignment: Text.AlignVCenter
-//            font.pointSize: 36
-//            color: "#ffffff"
-//        }
-//        highlighted: true
-//        font.pointSize: 28
-//        visible: false
-//    }
 
     Menu {
         id: menu

@@ -36,7 +36,7 @@ public class NotificationClient
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.icon))
                     .setContentTitle("Сейчас в эфире")
                     .setContentText(message)
-                    .setColor(Color.GREEN)
+                    .setColor(Color.BLUE)
                     .setAutoCancel(true);
 
             m_notificationManager.notify(0, m_builder.build());

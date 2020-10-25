@@ -34,7 +34,11 @@ ApplicationWindow {
                 highlighted: true
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                onClicked: Qt.callLater(Qt.quit)
+                onClicked:
+                {
+                    notification1.cancel()
+                    Qt.callLater(Qt.quit)
+                }
                 Text {
                     text: "Да"
                     color: "#9cbdec"
