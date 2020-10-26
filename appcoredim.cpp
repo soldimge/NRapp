@@ -5,20 +5,16 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
                                           tmr(new QTimer()),
                                           id(0)
 {
-    connect(this, SIGNAL(notificationChanged()), this, SLOT(updateAndroidNotification()));
+//    connect(this, SIGNAL(notificationChanged()), this, SLOT(updateAndroidNotification()));
     tmr->setInterval(3000);
     connect(tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
     updateTime();
     tmr->start();
 }
 
-const QAndroidJniObject m_JavaNotification("com/falsinsoft/qtandroidtools/AndroidNotification",
-                   "(Landroid/app/Activity)V",
-                   QtAndroid::androidActivity().object<jobject>());
-
 AppCoreDim::~AppCoreDim()
 {
-    cancel();
+//    cancel();
     delete manager;
     delete tmr;
 }
@@ -92,7 +88,7 @@ void AppCoreDim::replyFinished()
       if (temp != m_notification)
       {
           emit sendToQml(song);
-          emit notificationChanged();
+//          emit notificationChanged();
       }
   }
   else
@@ -145,19 +141,19 @@ void AppCoreDim::updateTime()
     }
 }
 
-void AppCoreDim::setNotification(const QString &notification)
-{
-    if (m_notification == notification)
-        return;
+//void AppCoreDim::setNotification(const QString &notification)
+//{
+//    if (m_notification == notification)
+//        return;
 
-    m_notification = notification;
-    emit notificationChanged();
-}
+//    m_notification = notification;
+//    emit notificationChanged();
+//}
 
-QString AppCoreDim::notification() const
-{
-    return m_notification;
-}
+//QString AppCoreDim::notification() const
+//{
+//    return m_notification;
+//}
 
 void AppCoreDim::picReplyFinished()
 {
@@ -177,18 +173,18 @@ void AppCoreDim::picReplyFinished()
     reply->deleteLater();
 }
 
-void AppCoreDim::updateAndroidNotification()
-{
-    QAndroidJniObject javaNotification = QAndroidJniObject::fromString(m_notification);
-    QAndroidJniObject::callStaticMethod<void>(
-        "org/soldimge/novoeradio/NotificationClient",
-        "notify",
-        "(Landroid/content/Context;Ljava/lang/String;)V",
-        QtAndroid::androidContext().object(),
-        javaNotification.object<jstring>());
-}
+//void AppCoreDim::updateAndroidNotification()
+//{
+//    QAndroidJniObject javaNotification = QAndroidJniObject::fromString(m_notification);
+//    QAndroidJniObject::callStaticMethod<void>(
+//        "org/soldimge/novoeradio/NotificationClient",
+//        "notify",
+//        "(Landroid/content/Context;Ljava/lang/String;)V",
+//        QtAndroid::androidContext().object(),
+//        javaNotification.object<jstring>());
+//}
 
-void AppCoreDim::cancel()
-{
-    QAndroidJniObject::callStaticMethod<void>("org/soldimge/novoeradio/NotificationClient", "cancel");
-}
+//void AppCoreDim::cancel()
+//{
+//    QAndroidJniObject::callStaticMethod<void>("org/soldimge/novoeradio/NotificationClient", "cancel");
+//}

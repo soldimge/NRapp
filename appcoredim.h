@@ -14,7 +14,7 @@
 class AppCoreDim : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString notification READ notification WRITE setNotification NOTIFY notificationChanged)
+//    Q_PROPERTY(QString notification READ notification WRITE setNotification NOTIFY notificationChanged)
 
 public:
     explicit AppCoreDim(QObject *parent = nullptr);
@@ -32,21 +32,21 @@ private:
     QString m_notification;
     void findPic();
     void work();
-    void setNotification(const QString &notification);
-    QString notification() const;
+//    void setNotification(const QString &notification);
+//    QString notification() const;
     void cancel();
 
 signals:
     void sendToQml(QString song);
     void sendToQml_pic(QString pic1);
-    void notificationChanged();
+//    void notificationChanged();
     void netError();
 
 public slots:
     void picReplyFinished();
     void replyFinished();
     void updateTime();
-    void updateAndroidNotification();
+//    void updateAndroidNotification();
 };
 
 #endif // APPCOREDIM_H

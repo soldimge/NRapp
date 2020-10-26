@@ -29,7 +29,7 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 android {
 include(C:/Users/by01.user/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
-include(../QtAndroidTools/QtAndroidTools.pri)
+include(../NRapp/QtAndroidTools/QtAndroidTools.pri)
 }
 
 HEADERS += \

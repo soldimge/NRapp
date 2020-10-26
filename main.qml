@@ -36,7 +36,6 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 onClicked:
                 {
-                    notification1.cancel()
                     Qt.callLater(Qt.quit)
                 }
                 Text {
