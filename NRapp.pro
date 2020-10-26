@@ -22,14 +22,13 @@ DISTFILES += \
     android/gradlew.bat \
     android/res/drawable/splash.xml \
     android/res/drawable/splash_image.png \
-    android/src/org/qtproject/example/notification/NotificationClient.java \
     android/res/values/libs.xml
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 android {
 include(C:/Users/by01.user/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
-include(../NRapp/QtAndroidTools/QtAndroidTools.pri)
+include(../NRapp/AndroidTools/QtAndroidTools.pri)
 }
 
 HEADERS += \

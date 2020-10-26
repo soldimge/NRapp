@@ -14,7 +14,6 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
 
 AppCoreDim::~AppCoreDim()
 {
-//    cancel();
     delete manager;
     delete tmr;
 }
@@ -88,7 +87,6 @@ void AppCoreDim::replyFinished()
       if (temp != m_notification)
       {
           emit sendToQml(song);
-//          emit notificationChanged();
       }
   }
   else
@@ -141,20 +139,6 @@ void AppCoreDim::updateTime()
     }
 }
 
-//void AppCoreDim::setNotification(const QString &notification)
-//{
-//    if (m_notification == notification)
-//        return;
-
-//    m_notification = notification;
-//    emit notificationChanged();
-//}
-
-//QString AppCoreDim::notification() const
-//{
-//    return m_notification;
-//}
-
 void AppCoreDim::picReplyFinished()
 {
     QString temp = pic1;
@@ -172,19 +156,3 @@ void AppCoreDim::picReplyFinished()
         emit sendToQml_pic(pic1);
     reply->deleteLater();
 }
-
-//void AppCoreDim::updateAndroidNotification()
-//{
-//    QAndroidJniObject javaNotification = QAndroidJniObject::fromString(m_notification);
-//    QAndroidJniObject::callStaticMethod<void>(
-//        "org/soldimge/novoeradio/NotificationClient",
-//        "notify",
-//        "(Landroid/content/Context;Ljava/lang/String;)V",
-//        QtAndroid::androidContext().object(),
-//        javaNotification.object<jstring>());
-//}
-
-//void AppCoreDim::cancel()
-//{
-//    QAndroidJniObject::callStaticMethod<void>("org/soldimge/novoeradio/NotificationClient", "cancel");
-//}
