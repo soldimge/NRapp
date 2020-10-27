@@ -5,6 +5,7 @@ import QtAndroidTools 1.0
 Page {
     width: 768
     height: 1024
+    property var hp
     property alias comboBox: comboBox
     property alias button: button
     property alias image1: image1
@@ -26,7 +27,7 @@ Page {
 
     QtAndroidNotification {
         id: notification1
-        title: "Сейчас в эфире"
+        title: comboBox.model[comboBox.currentIndex]
         text: text1.text
         expandableText: text1.text
         channelName: "playing now info"
@@ -132,6 +133,7 @@ Page {
                     text1.text = comboBox.model[comboBox.currentIndex]
                 notification1.cancel()
                 notification1.largeIconSource = image1.source
+                notification1.title = comboBox.model[comboBox.currentIndex]
                 notification1.text = text1.text
                 notification1.expandableText = text1.text
                 notification1.show()
@@ -139,6 +141,10 @@ Page {
             onSendToQml_pic: {
                 banner1.show()
                 image1.source = pic1
+            }
+            onSendToQml_homePage: {
+                hp = homepage
+                image.source = radioLogo
             }
         }
 
@@ -163,6 +169,16 @@ Page {
         height: rectangle.height / 2
         color: "#61181a1f"
         border.width: 0
+
+        Image {
+            id: image
+            opacity: 0.7
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            source: "http://cdn.onlineradiobox.com/img/logo/0/370.v23.png"
+            fillMode: Image.PreserveAspectFit
+        }
     }
 
     Label {
@@ -170,7 +186,7 @@ Page {
         color: "#ffffff"
         text: "В эфире"
         horizontalAlignment: Text.AlignHCenter
-        font.pointSize: 14
+        font.pointSize: 13
         anchors.centerIn: rectangle
     }
 

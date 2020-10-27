@@ -5,11 +5,14 @@
 
 #include "QtAndroidTools.h"
 #include "appcoredim.h"
+#include "keepawake.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
+
+    KeepAwake helper;
 
     QtAndroidTools::initializeQmlTools();
 

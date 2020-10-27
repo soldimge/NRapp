@@ -8,7 +8,8 @@ DEFINES += \
     QTAT_NOTIFICATION
 
 SOURCES += main.cpp \
-    appcoredim.cpp
+    appcoredim.cpp \
+    keepawake.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,6 +33,8 @@ include(../NRapp/AndroidTools/QtAndroidTools.pri)
 }
 
 HEADERS += \
-    appcoredim.h
+    appcoredim.h \
+    keepawake.h
 
 ANDROID_ABIS = armeabi-v7a arm64-v8a
+android: include(C:/Users/by01.user/AppData/Local/Android/Sdk/android_openssl/openssl.pri)

@@ -6,16 +6,12 @@
 #include <QTextCodec>
 #include <QString>
 #include <QRegExp>
-
 #include <QTimer>
 #include <QTime>
-#include <QtAndroid>
 
 class AppCoreDim : public QObject
 {
     Q_OBJECT
-//    Q_PROPERTY(QString notification READ notification WRITE setNotification NOTIFY notificationChanged)
-
 public:
     explicit AppCoreDim(QObject *parent = nullptr);
     ~AppCoreDim();
@@ -28,25 +24,25 @@ private:
     QUrl urlUser;
     QString song;
     QString pic1;
+    QString homepage;
     qint16 id;
     QString m_notification;
     void findPic();
     void work();
-//    void setNotification(const QString &notification);
-//    QString notification() const;
+    void homePage();
     void cancel();
 
 signals:
     void sendToQml(QString song);
     void sendToQml_pic(QString pic1);
-//    void notificationChanged();
     void netError();
+    void sendToQml_homePage(QString homepage, QString radioLogo);
 
 public slots:
     void picReplyFinished();
     void replyFinished();
+    void HPReplyFinished();
     void updateTime();
-//    void updateAndroidNotification();
 };
 
 #endif // APPCOREDIM_H

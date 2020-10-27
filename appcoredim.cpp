@@ -3,9 +3,9 @@
 AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
                                           manager(new QNetworkAccessManager(this)),
                                           tmr(new QTimer()),
+                                          homepage{"https://www.novoeradio.by/"},
                                           id(0)
 {
-//    connect(this, SIGNAL(notificationChanged()), this, SLOT(updateAndroidNotification()));
     tmr->setInterval(3000);
     connect(tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
     updateTime();
@@ -26,6 +26,39 @@ void AppCoreDim::but_click(qint16 i)
 void AppCoreDim::retry()
 {
     tmr->start();
+}
+
+void AppCoreDim::homePage()
+{
+    QNetworkRequest request(homepage);
+    QNetworkReply *myReply = manager->get(request);
+    connect(myReply, &QNetworkReply::finished, this, &AppCoreDim::HPReplyFinished);
+}
+
+void AppCoreDim::HPReplyFinished()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    if (reply->error() == QNetworkReply::NoError)
+    {
+        QByteArray content = reply->readAll();
+        homepage = content.data();
+        QString radioLogo{homepage};
+
+        QRegExp rgx("<li><a href=\"(htt.*)\" target");
+        rgx.indexIn(homepage);
+        homepage = rgx.cap(1);
+        homepage = homepage.left(homepage.indexOf("\" target"));
+
+        QRegExp rgx2("<img itemprop=\"image\" src=\"..(.*)\" alt");
+        rgx2.indexIn(radioLogo);
+        radioLogo = "http://" + rgx2.cap(1);
+        radioLogo = radioLogo.left(radioLogo.indexOf("\" alt"));
+
+        emit sendToQml_homePage(homepage, radioLogo);
+        qDebug() << "homepage " << homepage;
+        qDebug() << "radioLogo " << radioLogo;
+    }
+    reply->deleteLater();
 }
 
 void AppCoreDim::findPic()
@@ -53,7 +86,7 @@ void AppCoreDim::replyFinished()
       QRegExp rgx1("</span></td>\\s*.*class=\"ajax\">(.*)</a></td>");
       QRegExp rgx2("<td>(\\w.*)<");
 
-      qDebug() << "индекс rgx1" << song.indexOf(rgx1, 0) << "индекс rgx2" << song.indexOf(rgx2, 0);
+//      qDebug() << "индекс rgx1" << song.indexOf(rgx1, 0) << "индекс rgx2" << song.indexOf(rgx2, 0);
 
       if (song.indexOf(rgx1, 0) < song.indexOf(rgx2, 0) && song.indexOf(rgx1, 0)!= -1)
       {
@@ -84,9 +117,24 @@ void AppCoreDim::replyFinished()
       }
       m_notification.replace("<b>","");
       m_notification.replace("</b>","");
-      if (temp != m_notification)
+      if (temp != m_notification && song.length() < 100)
       {
           emit sendToQml(song);
+          if (id != 4 && id != 18)
+          {
+              QString path;
+              path = song;
+              path.replace(" ","%20");
+              path.replace("\n","%20-%20");
+              path.replace("&","%26");
+              path = "https://music.yandex.by/search?text=" + path + "&type=tracks";
+              urlUser = path;
+              if (pic1 != path)
+              {
+                  findPic();
+                  homePage();
+              }
+          }
       }
   }
   else
@@ -102,41 +150,31 @@ void AppCoreDim::updateTime()
 {
     switch (id)
     {
-        case 0 : urlUser = "https://onlineradiobox.com/by/novoeradio/playlist/"; break;
-        case 1 : urlUser = "https://onlineradiobox.com/by/unistar/playlist/"; break;
-        case 2 : urlUser = "https://onlineradiobox.com/by/rusradio/playlist/"; break;
+        case 0 : homepage = "https://onlineradiobox.com/by/novoeradio/"; break;
+        case 1 : homepage = "https://onlineradiobox.com/by/unistar/"; break;
+        case 2 : homepage = "https://onlineradiobox.com/by/rusradio/"; break;
         //4
-        case 3 : urlUser = "https://onlineradiobox.com/by/energyfm/playlist/"; break;
-        case 5 : urlUser = "https://onlineradiobox.com/by/melodiiveka/playlist/"; break;
-        case 6 : urlUser = "https://onlineradiobox.com/by/radiorelax/playlist/"; break;
-        case 7 : urlUser = "https://onlineradiobox.com/by/dushevnoeradio/playlist/"; break;
-        case 8 : urlUser = "https://onlineradiobox.com/by/radiys/playlist/"; break;
-        case 9 : urlUser = "https://onlineradiobox.com/by/radioba/playlist/"; break;
-        case 10 : urlUser = "https://onlineradiobox.com/by/legendy/playlist/"; break;
-        case 11 : urlUser = "https://onlineradiobox.com/by/wgfm/playlist/"; break;
-        case 12 : urlUser = "https://onlineradiobox.com/by/avtoradio/playlist/"; break;
-        case 13 : urlUser = "https://onlineradiobox.com/by/narodnoeradio/playlist/"; break;
-        case 14 : urlUser = "https://onlineradiobox.com/by/humorfm/playlist/"; break;
-        case 15 : urlUser = "https://onlineradiobox.com/by/v4you/playlist/"; break;
-        case 16 : urlUser = "https://onlineradiobox.com/by/pilotfm/playlist/"; break;
-        case 17 : urlUser = "https://onlineradiobox.com/by/aplus/playlist/"; break;
+        case 3 : homepage = "https://onlineradiobox.com/by/energyfm/"; break;
+        case 5 : homepage = "https://onlineradiobox.com/by/melodiiveka/"; break;
+        case 6 : homepage = "https://onlineradiobox.com/by/radiorelax/"; break;
+        case 7 : homepage = "https://onlineradiobox.com/by/dushevnoeradio/"; break;
+        case 8 : homepage = "https://onlineradiobox.com/by/radiys/"; break;
+        case 9 : homepage = "https://onlineradiobox.com/by/radioba/"; break;
+        case 10 : homepage = "https://onlineradiobox.com/by/legendy/"; break;
+        case 11 : homepage = "https://onlineradiobox.com/by/wgfm/"; break;
+        case 12 : homepage = "https://onlineradiobox.com/by/avtoradio/"; break;
+        case 13 : homepage = "https://onlineradiobox.com/by/narodnoeradio/"; break;
+        case 14 : homepage = "https://onlineradiobox.com/by/humorfm/"; break;
+        case 15 : homepage = "https://onlineradiobox.com/by/v4you/"; break;
+        case 16 : homepage = "https://onlineradiobox.com/by/pilotfm/"; break;
+        case 17 : homepage = "https://onlineradiobox.com/by/aplus/"; break;
         //18
-        case 19 : urlUser = "https://onlineradiobox.com/by/s13ru/playlist/"; break;
-        case 20 : urlUser = "https://onlineradiobox.com/by/radiobrest/playlist/"; break;
+        case 19 : homepage = "https://onlineradiobox.com/by/s13ru/"; break;
+        case 20 : homepage = "https://onlineradiobox.com/by/radiobrest/"; break;
         default:  break;
     }
+    urlUser = homepage + "playlist/";
     work();
-    if (id != 4 && id != 18)
-    {
-        QString path;
-        path = song;
-        path.replace(" ","%20");
-        path.replace("\n","%20-%20");
-        path.replace("&","%26");
-        path = "https://music.yandex.by/search?text=" + path + "&type=tracks";
-        urlUser = path;
-        findPic();
-    }
 }
 
 void AppCoreDim::picReplyFinished()

@@ -136,7 +136,7 @@ ApplicationWindow {
 
             mit2.onClicked:
             {
-                 Qt.openUrlExternally("https://www.novoeradio.by/")
+                 Qt.openUrlExternally(hp)
             }
             mit3.onClicked:
             {
@@ -154,7 +154,6 @@ ApplicationWindow {
                  audioPlayer.play()
                  comboBox.displayText = comboBox.model[comboBox.currentIndex]
                  backEnd.but_click(comboBox.currentIndex)
-//                 text1.text = comboBox.displayText
                  roundButton1.text = "||"
                  roundButton1.leftPadding = 12
                  roundButton1.font.pointSize = 34
