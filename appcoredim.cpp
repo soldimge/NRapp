@@ -3,9 +3,13 @@
 AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
                                           manager(new QNetworkAccessManager(this)),
                                           tmr(new QTimer()),
-                                          homepage{"https://www.novoeradio.by/"},
-                                          id(0)
+                                          homepage{"https://www.novoeradio.by/"}
 {
+    id = settings.value("id").toInt();
+    volume = settings.value("volume").toInt();
+    qDebug() << "volume " << volume;
+    if(volume == 0)
+        volume = 100;
     tmr->setInterval(3000);
     connect(tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
     updateTime();
@@ -14,6 +18,9 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
 
 AppCoreDim::~AppCoreDim()
 {
+    settings.setValue("id", id);
+    settings.setValue("volume", volume);
+    settings.sync();
     delete manager;
     delete tmr;
 }
@@ -21,6 +28,11 @@ AppCoreDim::~AppCoreDim()
 void AppCoreDim::but_click(qint16 i)
 {
     id = i;
+}
+
+void AppCoreDim::setVolume(qint16 vol)
+{
+    volume = vol;
 }
 
 void AppCoreDim::retry()
@@ -117,6 +129,12 @@ void AppCoreDim::replyFinished()
       }
       m_notification.replace("<b>","");
       m_notification.replace("</b>","");
+      static bool synq = true;
+      if (synq)
+      {
+          emit sendSettings(id, volume);
+          synq = false;
+      }
       if (temp != m_notification && song.length() < 100)
       {
           emit sendToQml(song);
@@ -139,7 +157,7 @@ void AppCoreDim::replyFinished()
   }
   else
   {
-//      qDebug() << reply->errorString();
+      qDebug() << reply->errorString();
       tmr->stop();
       emit netError();
   }

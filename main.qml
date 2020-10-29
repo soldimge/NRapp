@@ -36,6 +36,7 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 onClicked:
                 {
+                    backEnd.setVolume(Math.round(audioPlayer.volume * 100))
                     Qt.callLater(Qt.quit)
                 }
                 Text {
@@ -100,7 +101,7 @@ ApplicationWindow {
             states: [
                     State { name: "http://live.novoeradio.by:8000/novoeradio-128k" },
                     State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },
-                    State { name: "http://live.rusradio.by:8000/live" }, //
+                    State { name: "https://stream.hoster.by/rusradio/russkoe/icecast.audio?magic=true" }, //
                     State { name: "https://stream2.datacenter.by/energy" },
                     State { name: "http://de.streams.radioplayer.by:8000/live" }, //
                     State { name: "http://93.84.112.253:8010/MV128" },
@@ -132,15 +133,16 @@ ApplicationWindow {
                 text1.text = comboBox.displayText
             }
 
-            volumeSlider.onMoved: audioPlayer.volume = volumeSlider.value
+            volumeSlider.onValueChanged: {audioPlayer.volume = volumeSlider.value}
 
             mit2.onClicked:
             {
-                 Qt.openUrlExternally(hp)
+                Qt.openUrlExternally(hp)
             }
             mit3.onClicked:
             {
-                 Qt.callLater(Qt.quit)
+                backEnd.setVolume(Math.round(audioPlayer.volume * 100))
+                Qt.callLater(Qt.quit)
             }
             button.onClicked:
             {

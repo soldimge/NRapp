@@ -53,7 +53,6 @@ Page {
         source: "images/logo.png"
     }
 
-
     ComboBox {
         id: comboBox
         height: rectangle.height
@@ -145,6 +144,12 @@ Page {
             onSendToQml_homePage: {
                 hp = homepage
                 image.source = radioLogo
+            }
+            onSendSettings: {
+                comboBox.currentIndex = id
+                comboBox.displayText = comboBox.model[comboBox.currentIndex]
+                volumeSlider.value = volume/100
+                audioPlayer.volume = volumeSlider.value
             }
         }
 
