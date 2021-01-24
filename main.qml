@@ -98,6 +98,18 @@ ApplicationWindow {
         id: swipeView
         anchors.fill: parent
         Page1Form {
+            Connections {
+                    target: Qt.application
+                    onStateChanged: {
+                        console.log(Qt.application.state)
+
+//                        if (Qt.application.state === 2 || Qt.application.state === 0) {
+//                            audioPlayer.stop()
+//                        } else {
+//                            audioPlayer.play()
+//                        }
+                    }
+                }
             states: [
                     State { name: "http://live.novoeradio.by:8000/novoeradio-128k" },
                     State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },
@@ -190,10 +202,22 @@ ApplicationWindow {
 
     Audio {
             id: audioPlayer
+            audioRole: Audio.MusicRole
             source: " "
             autoLoad: false
             autoPlay: true
             volume: 1
+            onAvailabilityChanged: {
+                console.log(audioPlayer.availability)
+                if (audioPlayer.availability === Audio.Busy)
+                {
+                   audioPlayer.stop()
+                }
+                else
+                {
+                   audioPlayer.play()
+                }
+            }
         }
 }
 

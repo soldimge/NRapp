@@ -73,7 +73,7 @@ android {
     defaultConfig {
         resConfig "en"
         minSdkVersion = qtMinSdkVersion
-        targetSdkVersion = qtTargetSdkVersion
+        targetSdkVersion = 30
     }
 
     packagingOptions {

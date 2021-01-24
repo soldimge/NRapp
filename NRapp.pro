@@ -37,4 +37,3 @@ HEADERS += \
     keepawake.h
 
 ANDROID_ABIS = armeabi-v7a arm64-v8a
-android: include(C:/Users/by01.user/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
