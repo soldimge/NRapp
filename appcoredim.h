@@ -20,7 +20,7 @@ public:
     ~AppCoreDim();
     Q_INVOKABLE void but_click(qint16);
     Q_INVOKABLE void retry();
-    Q_INVOKABLE void setVolume(qint16);
+//    Q_INVOKABLE void setVolume(qint16);
 
     void emitStop(){emit stop();}
 
@@ -32,7 +32,7 @@ private:
     QString pic1;
     QString homepage;
     qint16 id;
-    qint16 volume;
+//    qint16 volume;
     QString m_notification;
     QSettings settings;
 
@@ -45,13 +45,14 @@ private:
     void cancel();
     static void audioFocusLoss(JNIEnv *env, jobject thiz);
     static void audioFocusGain(JNIEnv *env, jobject thiz);
+    static AppCoreDim* ptr;
 
 signals:
     void sendToQml(QString song);
     void sendToQml_pic(QString pic1);
     void netError();
     void sendToQml_homePage(QString homepage, QString radioLogo);
-    void sendSettings(qint16 id, qint16 volume);
+    void sendSettings(qint16 id);
     void stop();
 
 public slots:

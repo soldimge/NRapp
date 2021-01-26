@@ -3,94 +3,172 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.2
 import QtMultimedia 5.15
+import QtQuick.Window 2.15
+import Qt.labs.settings 1.0
+import QtQuick.Controls.Material 2.12
 
 ApplicationWindow {
+    id: window
+    width: Qt.platform.os === "windows" ? 360 : Screen.desktopAvailableWidth
+    height: Qt.platform.os === "windows" ? 640 : Screen.desktopAvailableHeight
+
     visible: true
-    width: 768
-    height: 1024
 
     onClosing: {
         close.accepted = false
-        dial.visible = true
+        dial.open()
       }
 
+    property var hp : mainSettings.value("hpSettings", "https://www.novoeradio.by/")
+
+    property bool isDarkTheme: mainSettings.value("isDarkThemeSettings", true)
+
+    Material.theme: Material.Dark
+
+    onIsDarkThemeChanged: {
+//        console.log(isDarkTheme)
+        if(isDarkTheme == true) {
+            Material.background = "#121c2f"
+            Material.foreground = "#d7d6d5"
+            Material.primary = "#9cbdec"
+            Material.accent = "#9cbdec"
+            Material.theme = Material.Dark
+        }
+        else {
+            Material.background = "#f3f3f3"
+            Material.foreground = "#000000"
+            Material.primary = "#f3f3f3"
+            Material.accent = "#9cbdec"
+            Material.theme = Material.Light
+        }
+    }
+
+    Settings {
+            id: mainSettings
+            property alias hpSettings: window.hp
+            property alias volumeSettings: audioPlayer.volume
+            property alias isDarkThemeSettings: window.isDarkTheme
+        }
+
     Dialog {
-        id: dial
-        visible: false
-        title: "Закрыть и выйти?"
+        id: aboutDialog
         modal: true
-        Overlay.modal: Rectangle {
-                    color: "#aacfdbe7"
-                }
+        focus: true
+        title: "About"
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
-        contentItem: Rectangle {
-            implicitWidth: 130
-            implicitHeight: 40
-            color: "#121c2f"
-            Button {
-                id: b1
-                flat: true
-                highlighted: true
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                onClicked:
-                {
-                    backEnd.setVolume(Math.round(audioPlayer.volume * 100))
-                    Qt.callLater(Qt.quit)
-                }
-                Text {
-                    text: "Да"
-                    color: "#9cbdec"
-                    anchors.centerIn: parent
-                }
+        width: parent.width*0.7
+        contentHeight: aboutColumn.height
+
+        Column {
+            id: aboutColumn
+            spacing: 20
+
+            Label {
+                width: aboutDialog.availableWidth
+                text: "Belarus radio\nVersion 0.1"
+                wrapMode: Label.Wrap
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: Qt.platform.os === "windows" ? 12 : 14
             }
-            Button {
-                flat: true
-                highlighted: true
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                onClicked: dial.visible = false
-                Text {
-                    text: "Нет"
-                    color: "#9cbdec"
-                    anchors.centerIn: parent
-                }
+
+            Label {
+                width: aboutDialog.availableWidth
+                text: "Contact the developer:"
+                    + "<br><style type=\"text/css\"></style><a href=\"mailto:soldimge@gmail.com?subject=Belarus radio%20android%20app\">soldimge@gmail.com</a><br>"
+                wrapMode: Label.Wrap
+                font.pointSize: Qt.platform.os === "windows" ? 10 : 14
+                onLinkActivated: Qt.openUrlExternally(link)
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
 
     Dialog {
-        id: dialNoConnection
-        visible: false
-        title: "Проверьте подключение к сети"
+        id: dial
+        title: "Закрыть и выйти?"
         modal: true
-        Overlay.modal: Rectangle {
-                    color: "#aacfdbe7"
-                }
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
-        contentItem: Rectangle {
-            implicitWidth: parent.width
-            implicitHeight: 40
-            color: "#121c2f"
-            Button {
-                id: dNCb1
-                width: parent.width / 3
-                flat: true
-                highlighted: true
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: Qt.callLater(Qt.quit)
+    }
+
+    Dialog {
+        id: dialNoConnection
+        title: "Проверьте подключение к сети"
+        modal: true
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+        standardButtons: Dialog.Ok
+        onAccepted: {
+            dialNoConnection.close()
+            backEnd.retry()
+        }
+    }
+
+    Menu {
+        id: menu
+        width: 180
+        x: parent.width - width
+        y: 0
+        MenuItem {
+            id: mit1
+            Column {
+                id: col
+                anchors.left: parent.left
+                anchors.leftMargin: 10
                 anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                onClicked: {
-                    dialNoConnection.visible = false
-                    backEnd.retry()
+                anchors.rightMargin: 10
+                Label
+                {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
+                    anchors.right: parent.right
+                    anchors.rightMargin: 5
+                    text: "\nГромкость:       " + Math.round(volumeSlider.value * 100) + "%"
                 }
-                Text {
-                    text: "Повторить"
-                    color: "#9cbdec"
-                    anchors.centerIn: parent
+                Slider {
+                    id: volumeSlider
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    orientation: Qt.Horizontal
+                    value: 1
+                    stepSize : 0.01
+                    snapMode : Slider.SnapAlways
                 }
+                }
+            height: col.height
+        }
+        MenuItem {
+            text: "Перейти на сайт"
+            onClicked: Qt.openUrlExternally(hp)
+        }
+        MenuItem {
+            text: isDarkTheme == true ? qsTr("Light theme") : qsTr("Standard theme")
+            onTriggered: {
+                isDarkTheme = (isDarkTheme == true) ? false : true
             }
+        }
+        MenuItem {
+            text: "О приложении"
+            onTriggered: {
+                aboutDialog.open()
+            }
+        }
+        MenuSeparator {
+            width: parent.width
+            padding: 0
+            topPadding: 4
+            bottomPadding: 4
+        }
+        MenuItem {
+            text: "Выход"
+            onClicked: Qt.callLater(Qt.quit)
         }
     }
 
@@ -98,19 +176,6 @@ ApplicationWindow {
         id: swipeView
         anchors.fill: parent
         HomePage {
-            Connections {
-                    target: Qt.application
-                    onStateChanged: {
-                        console.log(Qt.application.state)
-
-//                        if (Qt.application.state === 2 || Qt.application.state === 0) {
-//                            audioPlayer.stop()
-//                        } else {
-//                            audioPlayer.play()
-//                        }                       
-                    }
-            }
-
             states: [
                     State { name: "http://live.novoeradio.by:8000/novoeradio-128k" },
                     State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },
@@ -134,33 +199,7 @@ ApplicationWindow {
                     State { name: "https://c28.radioboss.fm:18099/stream" },
                     State { name: "http://93.84.112.253:8039/stream" }
                 ]
-            comboBox.onActivated:
-            {
-                roundButton1.text = "||"
-                roundButton1.leftPadding = 12
-                roundButton1.font.pointSize = 34
-                audioPlayer.source = states[comboBox.currentIndex].name
-                audioPlayer.play()
-                comboBox.displayText = comboBox.model[comboBox.currentIndex]
-                backEnd.but_click(comboBox.currentIndex)
-                text1.text = comboBox.displayText
-            }
 
-            volumeSlider.onValueChanged: {audioPlayer.volume = volumeSlider.value}
-
-            mit2.onClicked:
-            {
-                Qt.openUrlExternally(hp)
-            }
-            mit3.onClicked:
-            {
-                backEnd.setVolume(Math.round(audioPlayer.volume * 100))
-                Qt.callLater(Qt.quit)
-            }
-            button.onClicked:
-            {
-                 menu.open()
-            }
             roundButton1.onClicked:
             {
              if (roundButton1.text == "►")
@@ -182,21 +221,16 @@ ApplicationWindow {
              }
             }
 
-            butMit4VK.onClicked:
+            comboBox.onActivated:
             {
-                 Qt.openUrlExternally("https://vk.com/club22730082")
-            }
-            butMit4IN.onClicked:
-            {
-                 Qt.openUrlExternally("https://instagram.com/novoeradio/")
-            }
-            butMit4FB.onClicked:
-            {
-                 Qt.openUrlExternally("https://www.facebook.com/novoeradio.by")
-            }
-            butMit4VB.onClicked:
-            {
-                 Qt.openUrlExternally("https://invite.viber.com/?g2=AQBMbJwidArNlkqg65%2FAF0N7KU%2FfpDR7%2FcVDBJuVzomWN%2BBT0ZKOmM4ur2CugiCG&lang=ru")
+                roundButton1.text = "||"
+                roundButton1.leftPadding = 12
+                roundButton1.font.pointSize = 34
+                audioPlayer.source = states[comboBox.currentIndex].name
+                audioPlayer.play()
+                comboBox.displayText = comboBox.model[comboBox.currentIndex]
+                backEnd.but_click(comboBox.currentIndex)
+                text1.text = comboBox.displayText
             }
         }
     }
@@ -207,18 +241,7 @@ ApplicationWindow {
             source: " "
             autoLoad: false
             autoPlay: true
-            volume: 1
-            onAvailabilityChanged: {
-                console.log(audioPlayer.availability)
-                if (audioPlayer.availability === Audio.Busy)
-                {
-                   audioPlayer.stop()
-                }
-                else
-                {
-                   audioPlayer.play()
-                }
-            }
+            volume: mainSettings.value("volumeSettings", 1)
         }
 }
 

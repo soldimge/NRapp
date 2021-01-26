@@ -2,7 +2,7 @@
 
 bool AppCoreDim::_mediaRegistered = false;
 bool AppCoreDim::_isPlaying = false;
-AppCoreDim* ptr;
+AppCoreDim* AppCoreDim::ptr = nullptr;
 
 AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
                                           manager(new QNetworkAccessManager(this)),
@@ -23,10 +23,7 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
     env->DeleteLocalRef(objectClass);
 
     id = settings.value("id").toInt();
-    volume = settings.value("volume").toInt();
-    qDebug() << "volume " << volume;
-    if(volume == 0)
-        volume = 100;
+
     tmr->setInterval(3000);
     connect(tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
     updateTime();
@@ -37,15 +34,13 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
 AppCoreDim::~AppCoreDim()
 {
     settings.setValue("id", id);
-    settings.setValue("volume", volume);
     settings.sync();
     delete manager;
     delete tmr;
 }
 
-void AppCoreDim::but_click(qint16 i = ptr->id)
+void AppCoreDim::but_click(qint16 i)
 {
-//    _isPlaying = playing;
     id = i;
     if(!_mediaRegistered)
     {
@@ -54,11 +49,6 @@ void AppCoreDim::but_click(qint16 i = ptr->id)
         qDebug() << "|||||JAVA : _mediaRegistered = true|||||";
     }
 //    QAndroidJniObject::callStaticMethod<void>("org/soldimge/radiod/AndroidSDG", "show");
-}
-
-void AppCoreDim::setVolume(qint16 vol)
-{
-    volume = vol;
 }
 
 void AppCoreDim::retry()
@@ -175,7 +165,7 @@ void AppCoreDim::replyFinished()
       static bool synq = true;
       if (synq)
       {
-          emit sendSettings(id, volume);
+          emit sendSettings(id);
           synq = false;
       }
       if (temp != m_notification && song.length() < 100)

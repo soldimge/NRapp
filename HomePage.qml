@@ -3,26 +3,14 @@ import QtQuick.Controls 2.15
 import QtAndroidTools 1.0
 
 Page {
-    width: 768
-    height: 1024
-    property var hp
+
     property alias comboBox: comboBox
     property alias button: button
     property alias image1: image1
     property alias image2: image2
     property alias roundButton1: roundButton1
     property alias text1: text1
-    property alias menu: menu
-    property alias mit1: mit1
-    property alias mit2: mit2
-    property alias mit3: mit3
-    property alias mit4: mit4
-    property alias butMit4VK: butMit4VK
-    property alias butMit4IN: butMit4IN
-    property alias butMit4FB: butMit4FB
-    property alias butMit4VB: butMit4VB
     property alias banner1: banner1
-    property alias volumeSlider: volumeSlider
     property alias notification1: notification1
 
     QtAndroidNotification {
@@ -56,14 +44,14 @@ Page {
     ComboBox {
         id: comboBox
         height: rectangle.height
-        flat: true
+//        flat: true
         currentIndex: 0
         anchors.right: parent.right
         anchors.top: rectangle.bottom
         anchors.left: parent.left
         background: Rectangle
         {
-            color: "#121c2f"
+            color: isDarkTheme == true ? "#0000ffff" : "#d7d6d5"
             border.width: 0
         }
         model: ["Новое Радио", "Радио Unistar", "Русское Радио", "Energy FM", "Радио РОКС",
@@ -75,7 +63,7 @@ Page {
             width: comboBox.width
             contentItem: Text {
                 text: modelData
-                color: "#9cbdec"
+                color: isDarkTheme == true ? "#9cbdec" : "#000000"
                 font: comboBox.font
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
@@ -87,7 +75,7 @@ Page {
         contentItem: Text {
             leftPadding: 20
             text: comboBox.displayText
-            color: "#9cbdec"
+            color: isDarkTheme == true ? "#9cbdec" : "#000000"
             font.pointSize: 25
             verticalAlignment: Text.AlignVCenter
         }
@@ -120,7 +108,7 @@ Page {
             target: backEnd
 
             onNetError: {
-                dialNoConnection.visible = true
+                dialNoConnection.open()
             }
             onSendToQml: {
                 if (comboBox.currentIndex != 4)
@@ -148,15 +136,12 @@ Page {
             onSendSettings: {
                 comboBox.currentIndex = id
                 comboBox.displayText = comboBox.model[comboBox.currentIndex]
-                volumeSlider.value = volume/100
-                audioPlayer.volume = volumeSlider.value
             }
             onStop: {
                 audioPlayer.stop()
                 roundButton1.text = "►"
                 roundButton1.leftPadding = 21
                 roundButton1.font.pointSize = 50
-                console.log("dima: audio stop")
             }
         }
 
@@ -236,123 +221,12 @@ Page {
             color: "#ffffff"
         }
         font.pointSize: 28
-    }
-
-    Menu {
-        id: menu
-        width: 180
-        x: parent.width - width
-        y: 0
-        MenuItem {
-            id: mit1
-            text: "\nГромкость:       " + Math.round(volumeSlider.value * 100) + "%"
-            height: mit2.height*2
-            Slider {
-                id: volumeSlider
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                orientation: Qt.Horizontal
-                value: 1
-                stepSize : 0.01
-                snapMode : Slider.SnapAlways
-            }
-        }
-        MenuItem {
-            id: mit2
-            text: "Перейти на сайт"
-        }
-        MenuItem {
-            id: mit4
-            Button {
-                id: butMit4VK
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 3
-                width: height*0.86
-                flat: true
-                highlighted: true
-                Image {
-                    anchors.fill: parent
-                    anchors.centerIn: butMit4VK
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/vk.png"
-                    scale: 0.5
-                }
-            }
-            Button {
-                id: butMit4IN
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: butMit4VK.right
-                anchors.leftMargin: 3
-                width: height*0.86
-                flat: true
-                highlighted: true
-                Image {
-                    anchors.fill: parent
-                    anchors.centerIn: butMit4IN
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/instagram.png"
-                    scale: 0.5
-                }
-            }
-            Button {
-                id: butMit4FB
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: butMit4IN.right
-                anchors.leftMargin: 3
-                width: height*0.86
-                flat: true
-                highlighted: true
-                Image {
-                    anchors.fill: parent
-                    anchors.centerIn: butMit4FB
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/fb.png"
-                    scale: 0.5
-                }
-            }
-            Button {
-                id: butMit4VB
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: butMit4FB.right
-                anchors.leftMargin: 3
-                width: height*0.86
-                flat: true
-                highlighted: true
-                Image {
-                    anchors.fill: parent
-                    anchors.centerIn: butMit4VB
-                    fillMode: Image.PreserveAspectFit
-                    source: "images/viber.png"
-                    scale: 0.5
-                }
-            }
-        }
-        MenuSeparator {
-                    padding: 0
-                    topPadding: 4
-                    bottomPadding: 4
-                    contentItem: Rectangle {
-                    implicitWidth: 120
-                    implicitHeight: 1
-                    color: "#0b0d12"
-                    }
-        }
-        MenuItem {
-            id: mit3
-            text: "Выход"
-        }
+        onClicked: menu.open()
     }
 
     Rectangle {
         id: rectangle1
-        color: "#000000"
+        color: isDarkTheme == true ? "#000000" : "#f3f3f3"
         border.width: 0
         anchors.right: parent.right
         anchors.top: comboBox.bottom
@@ -370,11 +244,3 @@ Page {
     }
 }
 
-//#44aa3f
-//#0b0d12
-
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:0.6600000262260437}
-}
-##^##*/

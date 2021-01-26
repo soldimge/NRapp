@@ -12,7 +12,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
+    qputenv("QT_QUICK_CONTROLS_STYLE", "material");
     KeepAwake lock;
+
+    app.setOrganizationName("Belarus radio");
+    app.setOrganizationDomain("soldimge@gmail.com");
+    app.setApplicationName("Belarus radio");
 
     QtAndroidTools::initializeQmlTools();
 
