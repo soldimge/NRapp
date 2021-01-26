@@ -97,7 +97,7 @@ ApplicationWindow {
     SwipeView {
         id: swipeView
         anchors.fill: parent
-        Page1Form {
+        HomePage {
             Connections {
                     target: Qt.application
                     onStateChanged: {
@@ -107,9 +107,10 @@ ApplicationWindow {
 //                            audioPlayer.stop()
 //                        } else {
 //                            audioPlayer.play()
-//                        }
+//                        }                       
                     }
-                }
+            }
+
             states: [
                     State { name: "http://live.novoeradio.by:8000/novoeradio-128k" },
                     State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },

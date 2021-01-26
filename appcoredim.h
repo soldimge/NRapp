@@ -1,5 +1,4 @@
-#ifndef APPCOREDIM_H
-#define APPCOREDIM_H
+#pragma once
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -10,6 +9,9 @@
 #include <QTime>
 #include <QSettings>
 
+#include <QAndroidJniObject>
+#include <QAndroidJniEnvironment>
+
 class AppCoreDim : public QObject
 {
     Q_OBJECT
@@ -19,6 +21,8 @@ public:
     Q_INVOKABLE void but_click(qint16);
     Q_INVOKABLE void retry();
     Q_INVOKABLE void setVolume(qint16);
+
+    void emitStop(){emit stop();}
 
 private:
     QNetworkAccessManager* manager;
@@ -31,10 +35,16 @@ private:
     qint16 volume;
     QString m_notification;
     QSettings settings;
+
+    static bool _mediaRegistered;
+    static bool _isPlaying;
+
     void findPic();
     void work();
     void homePage();
     void cancel();
+    static void audioFocusLoss(JNIEnv *env, jobject thiz);
+    static void audioFocusGain(JNIEnv *env, jobject thiz);
 
 signals:
     void sendToQml(QString song);
@@ -42,6 +52,7 @@ signals:
     void netError();
     void sendToQml_homePage(QString homepage, QString radioLogo);
     void sendSettings(qint16 id, qint16 volume);
+    void stop();
 
 public slots:
     void picReplyFinished();
@@ -50,4 +61,3 @@ public slots:
     void updateTime();
 };
 
-#endif // APPCOREDIM_H

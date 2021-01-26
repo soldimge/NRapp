@@ -1,10 +1,27 @@
 #include "appcoredim.h"
 
+bool AppCoreDim::_mediaRegistered = false;
+bool AppCoreDim::_isPlaying = false;
+AppCoreDim* ptr;
+
 AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
                                           manager(new QNetworkAccessManager(this)),
                                           tmr(new QTimer()),
                                           homepage{"https://www.novoeradio.by/"}
 {
+
+    JNINativeMethod methods[] {{"audioFocusLoss", "()V", reinterpret_cast<void *>(audioFocusLoss)},
+                               {"audioFocusGain", "()V", reinterpret_cast<void *>(audioFocusGain)}};
+
+    QAndroidJniObject javaClass("org/soldimge/radiod/AndroidSDG");
+    QAndroidJniEnvironment env;
+
+    jclass objectClass = env->GetObjectClass(javaClass.object<jobject>());
+    env->RegisterNatives(objectClass,
+                         methods,
+                         sizeof(methods) / sizeof(methods[0]));
+    env->DeleteLocalRef(objectClass);
+
     id = settings.value("id").toInt();
     volume = settings.value("volume").toInt();
     qDebug() << "volume " << volume;
@@ -14,6 +31,7 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
     connect(tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
     updateTime();
     tmr->start();
+    ptr = this;
 }
 
 AppCoreDim::~AppCoreDim()
@@ -25,9 +43,17 @@ AppCoreDim::~AppCoreDim()
     delete tmr;
 }
 
-void AppCoreDim::but_click(qint16 i)
+void AppCoreDim::but_click(qint16 i = ptr->id)
 {
+//    _isPlaying = playing;
     id = i;
+    if(!_mediaRegistered)
+    {
+        QAndroidJniObject::callStaticMethod<void>("org/soldimge/radiod/AndroidSDG", "registerMediaReceiver");
+        _mediaRegistered = true;
+        qDebug() << "|||||JAVA : _mediaRegistered = true|||||";
+    }
+//    QAndroidJniObject::callStaticMethod<void>("org/soldimge/radiod/AndroidSDG", "show");
 }
 
 void AppCoreDim::setVolume(qint16 vol)
@@ -45,6 +71,23 @@ void AppCoreDim::homePage()
     QNetworkRequest request(homepage);
     QNetworkReply *myReply = manager->get(request);
     connect(myReply, &QNetworkReply::finished, this, &AppCoreDim::HPReplyFinished);
+}
+
+void AppCoreDim::audioFocusLoss(JNIEnv *env, jobject thiz)
+{
+    Q_UNUSED(env)
+    Q_UNUSED(thiz)
+    qDebug() << "||JAVA : AUDIOFOCUS_LOSS";
+    _mediaRegistered = false;
+    ptr->emitStop();
+}
+
+void AppCoreDim::audioFocusGain(JNIEnv *env, jobject thiz)
+{
+    Q_UNUSED(env)
+    Q_UNUSED(thiz)
+    qDebug() << "||JAVA : AUDIOFOCUS_GAIN";
+    _mediaRegistered = true;
 }
 
 void AppCoreDim::HPReplyFinished()

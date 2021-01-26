@@ -23,12 +23,12 @@ DISTFILES += \
     android/gradlew.bat \
     android/res/drawable/splash.xml \
     android/res/drawable/splash_image.png \
-    android/res/values/libs.xml
+    android/res/values/libs.xml \
+    android/src/org/soldimge/radiod/AndroidSDG.java
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 android {
-include(C:/Users/by01.user/AppData/Local/Android/Sdk/android_openssl/openssl.pri)
 include(../NRapp/AndroidTools/QtAndroidTools.pri)
 }
 
@@ -37,3 +37,4 @@ HEADERS += \
     keepawake.h
 
 ANDROID_ABIS = armeabi-v7a arm64-v8a
+android: include(C:/Users/by01.user/AppData/Local/Android/Sdk/android_openssl/openssl.pri)

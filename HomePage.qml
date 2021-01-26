@@ -151,6 +151,13 @@ Page {
                 volumeSlider.value = volume/100
                 audioPlayer.volume = volumeSlider.value
             }
+            onStop: {
+                audioPlayer.stop()
+                roundButton1.text = "►"
+                roundButton1.leftPadding = 21
+                roundButton1.font.pointSize = 50
+                console.log("dima: audio stop")
+            }
         }
 
     Rectangle {
