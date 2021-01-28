@@ -9,9 +9,6 @@ import android.media.AudioFocusRequest;
     /** Manages a volume level of output stream  */
 public class AndroidSDG
 {
-
-    private static boolean mediaRegistered_ = false;
-
     private static Context c = QtNative.activity().getApplicationContext();
 
     private static AudioManager manager = (AudioManager)c.getSystemService(c.AUDIO_SERVICE);
@@ -62,7 +59,6 @@ public class AndroidSDG
                         }
                     }
                 }).build());
-            mediaRegistered_ = true;
         }
 }
     private static native void audioFocusLoss();

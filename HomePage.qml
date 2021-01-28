@@ -10,7 +10,7 @@ Page {
     property alias image2: image2
     property alias roundButton1: roundButton1
     property alias text1: text1
-    property alias banner1: banner1
+//    property alias banner1: banner1
     property alias notification1: notification1
 
     QtAndroidNotification {
@@ -39,12 +39,13 @@ Page {
         anchors.left: parent.left
         anchors.right: parent.right
         source: "images/logo.png"
+        onSourceChanged: console.log("song logo updated")
+        cache: false
     }
 
     ComboBox {
         id: comboBox
         height: rectangle.height
-//        flat: true
         currentIndex: 0
         anchors.right: parent.right
         anchors.top: rectangle.bottom
@@ -143,6 +144,9 @@ Page {
                 roundButton1.leftPadding = 21
                 roundButton1.font.pointSize = 50
             }
+            onPlay: {
+                roundButton1.clicked()
+            }
         }
 
     Rectangle {
@@ -175,6 +179,7 @@ Page {
             anchors.left: parent.left
             source: "http://cdn.onlineradiobox.com/img/logo/0/370.v23.png"
             fillMode: Image.PreserveAspectFit
+            onSourceChanged: console.log("radio logo updated")
         }
     }
 
@@ -210,19 +215,35 @@ Page {
         anchors.top: rectangle3.top
         anchors.bottom: rectangle3.bottom
         anchors.right: parent.right
-
-        Text {
-            anchors.centerIn: button
-            text: "⋮"
-            bottomPadding: 5
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 36
-            color: "#ffffff"
+        Image {
+            id: toolButton3Pic
+            anchors.fill: parent
+            anchors.centerIn: parent
+            fillMode: Image.PreserveAspectFit
+            source: "qrc:/images/menu.png"
+            scale: 0.5
         }
-        font.pointSize: 28
         onClicked: menu.open()
     }
+
+//    ToolButton {
+//        id: button
+//        anchors.top: rectangle3.top
+//        anchors.bottom: rectangle3.bottom
+//        anchors.right: parent.right
+
+//        Text {
+//            anchors.centerIn: button
+//            text: "⋮"
+//            bottomPadding: 5
+//            horizontalAlignment: Text.AlignHCenter
+//            verticalAlignment: Text.AlignVCenter
+//            font.pointSize: 36
+//            color: "#ffffff"
+//        }
+//        font.pointSize: 28
+//        onClicked: menu.open()
+//    }
 
     Rectangle {
         id: rectangle1

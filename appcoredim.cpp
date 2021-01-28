@@ -1,15 +1,15 @@
 #include "appcoredim.h"
 
 bool AppCoreDim::_mediaRegistered = false;
-bool AppCoreDim::_isPlaying = false;
+//bool AppCoreDim::_isPlaying = false;
 AppCoreDim* AppCoreDim::ptr = nullptr;
 
 AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
-                                          manager(new QNetworkAccessManager(this)),
-                                          tmr(new QTimer()),
-                                          homepage{"https://www.novoeradio.by/"}
-{
-
+                                          _manager(new QNetworkAccessManager(this)),
+                                          _tmr(new QTimer()),
+                                          _homepage{"https://www.novoeradio.by/"}
+{    
+    ptr = this;
     JNINativeMethod methods[] {{"audioFocusLoss", "()V", reinterpret_cast<void *>(audioFocusLoss)},
                                {"audioFocusGain", "()V", reinterpret_cast<void *>(audioFocusGain)}};
 
@@ -22,26 +22,25 @@ AppCoreDim::AppCoreDim(QObject *parent) : QObject(parent),
                          sizeof(methods) / sizeof(methods[0]));
     env->DeleteLocalRef(objectClass);
 
-    id = settings.value("id").toInt();
+    _id = _settings.value("id").toInt();
 
-    tmr->setInterval(3000);
-    connect(tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
+    _tmr->setInterval(3000);
+    connect(_tmr, SIGNAL(timeout()), this, SLOT(updateTime()));
     updateTime();
-    tmr->start();
-    ptr = this;
+    _tmr->start();
 }
 
 AppCoreDim::~AppCoreDim()
 {
-    settings.setValue("id", id);
-    settings.sync();
-    delete manager;
-    delete tmr;
+    _settings.setValue("id", _id);
+    _settings.sync();
+    delete _manager;
+    delete _tmr;
 }
 
 void AppCoreDim::but_click(qint16 i)
 {
-    id = i;
+    _id = i;
     if(!_mediaRegistered)
     {
         QAndroidJniObject::callStaticMethod<void>("org/soldimge/radiod/AndroidSDG", "registerMediaReceiver");
@@ -53,13 +52,13 @@ void AppCoreDim::but_click(qint16 i)
 
 void AppCoreDim::retry()
 {
-    tmr->start();
+    _tmr->start();
 }
 
 void AppCoreDim::homePage()
 {
-    QNetworkRequest request(homepage);
-    QNetworkReply *myReply = manager->get(request);
+    QNetworkRequest request(_homepage);
+    QNetworkReply *myReply = _manager->get(request);
     connect(myReply, &QNetworkReply::finished, this, &AppCoreDim::HPReplyFinished);
 }
 
@@ -78,6 +77,7 @@ void AppCoreDim::audioFocusGain(JNIEnv *env, jobject thiz)
     Q_UNUSED(thiz)
     qDebug() << "||JAVA : AUDIOFOCUS_GAIN";
     _mediaRegistered = true;
+    ptr->emitPlay();
 }
 
 void AppCoreDim::HPReplyFinished()
@@ -86,21 +86,21 @@ void AppCoreDim::HPReplyFinished()
     if (reply->error() == QNetworkReply::NoError)
     {
         QByteArray content = reply->readAll();
-        homepage = content.data();
-        QString radioLogo{homepage};
+        _homepage = content.data();
+        QString radioLogo{_homepage};
 
         QRegExp rgx("<li><a href=\"(htt.*)\" target");
-        rgx.indexIn(homepage);
-        homepage = rgx.cap(1);
-        homepage = homepage.left(homepage.indexOf("\" target"));
+        rgx.indexIn(_homepage);
+        _homepage = rgx.cap(1);
+        _homepage = _homepage.left(_homepage.indexOf("\" target"));
 
         QRegExp rgx2("<img itemprop=\"image\" src=\"..(.*)\" alt");
         rgx2.indexIn(radioLogo);
         radioLogo = "http://" + rgx2.cap(1);
         radioLogo = radioLogo.left(radioLogo.indexOf("\" alt"));
 
-        emit sendToQml_homePage(homepage, radioLogo);
-        qDebug() << "homepage " << homepage;
+        emit sendToQml_homePage(_homepage, radioLogo);
+        qDebug() << "homepage " << _homepage;
         qDebug() << "radioLogo " << radioLogo;
     }
     reply->deleteLater();
@@ -108,15 +108,15 @@ void AppCoreDim::HPReplyFinished()
 
 void AppCoreDim::findPic()
 {
-    QNetworkRequest request(urlUser);
-    QNetworkReply *myReply = manager->get(request);
+    QNetworkRequest request(_urlUser);
+    QNetworkReply *myReply = _manager->get(request);
     connect(myReply, &QNetworkReply::finished, this, &AppCoreDim::picReplyFinished);
 }
 
 void AppCoreDim::work()
 {
-    QNetworkRequest request(urlUser);
-    QNetworkReply *myReply = manager->get(request);
+    QNetworkRequest request(_urlUser);
+    QNetworkReply *myReply = _manager->get(request);
     connect(myReply, &QNetworkReply::finished, this, &AppCoreDim::replyFinished);
 }
 
@@ -126,61 +126,61 @@ void AppCoreDim::replyFinished()
   if (reply->error() == QNetworkReply::NoError)
   {
       QByteArray content= reply->readAll();
-      song = content.data();
+      _song = content.data();
 
       QRegExp rgx1("</span></td>\\s*.*class=\"ajax\">(.*)</a></td>");
       QRegExp rgx2("<td>(\\w.*)<");
 
 //      qDebug() << "индекс rgx1" << song.indexOf(rgx1, 0) << "индекс rgx2" << song.indexOf(rgx2, 0);
 
-      if (song.indexOf(rgx1, 0) < song.indexOf(rgx2, 0) && song.indexOf(rgx1, 0)!= -1)
+      if (_song.indexOf(rgx1, 0) < _song.indexOf(rgx2, 0) && _song.indexOf(rgx1, 0)!= -1)
       {
-          rgx1.indexIn(song);
-          song = rgx1.cap(1);
-          song = song.left(song.indexOf("</a></td>"));
+          rgx1.indexIn(_song);
+          _song = rgx1.cap(1);
+          _song = _song.left(_song.indexOf("</a></td>"));
       }
       else
       {
-          rgx2.indexIn(song);
-          song = rgx2.cap(1);
-          song = song.left(song.indexOf("</td>"));
+          rgx2.indexIn(_song);
+          _song = rgx2.cap(1);
+          _song = _song.left(_song.indexOf("</td>"));
       }
 
-      song.replace("&amp;", "&");
-      song.replace("&#34", "'");
-      song.replace("&#39;", "`");
-      song.replace(" - ", "\n");
-      song.replace(";", "&");
-      song = song.left(song.indexOf("["));
+      _song.replace("&amp;", "&");
+      _song.replace("&#34", "'");
+      _song.replace("&#39;", "`");
+      _song.replace(" - ", "\n");
+      _song.replace(";", "&");
+      _song = _song.left(_song.indexOf("["));
 
-      QString temp = m_notification;
-      switch (id)
+      QString temp = _mNotification;
+      switch (_id)
       {
-        case 4 : m_notification = "Радио РОКС"; break;
+        case 4 : _mNotification = "Радио РОКС"; break;
 //        case 18 : m_notification = "Центр FM"; break;
-        default: m_notification = song; break;
+        default: _mNotification = _song; break;
       }
-      m_notification.replace("<b>","");
-      m_notification.replace("</b>","");
+      _mNotification.replace("<b>","");
+      _mNotification.replace("</b>","");
       static bool synq = true;
       if (synq)
       {
-          emit sendSettings(id);
+          emit sendSettings(_id);
           synq = false;
       }
-      if (temp != m_notification && song.length() < 100)
+      if (temp != _mNotification && _song.length() < 100)
       {
-          emit sendToQml(song);
-          if (id != 4 && id != 18)
+          emit sendToQml(_song);
+          if (_id != 4 && _id != 18)
           {
               QString path;
-              path = song;
+              path = _song;
               path.replace(" ","%20");
               path.replace("\n","%20-%20");
               path.replace("&","%26");
               path = "https://music.yandex.by/search?text=" + path + "&type=tracks";
-              urlUser = path;
-              if (pic1 != path)
+              _urlUser = path;
+              if (_pic1 != path)
               {
                   findPic();
                   homePage();
@@ -191,7 +191,7 @@ void AppCoreDim::replyFinished()
   else
   {
       qDebug() << reply->errorString();
-      tmr->stop();
+      _tmr->stop();
       emit netError();
   }
   reply->deleteLater();
@@ -199,49 +199,49 @@ void AppCoreDim::replyFinished()
 
 void AppCoreDim::updateTime()
 {
-    switch (id)
+    switch (_id)
     {
-        case 0 : homepage = "https://onlineradiobox.com/by/novoeradio/"; break;
-        case 1 : homepage = "https://onlineradiobox.com/by/unistar/"; break;
-        case 2 : homepage = "https://onlineradiobox.com/by/rusradio/"; break;
+        case 0 : _homepage = "https://onlineradiobox.com/by/novoeradio/"; break;
+        case 1 : _homepage = "https://onlineradiobox.com/by/unistar/"; break;
+        case 2 : _homepage = "https://onlineradiobox.com/by/rusradio/"; break;
         //4
-        case 3 : homepage = "https://onlineradiobox.com/by/energyfm/"; break;
-        case 5 : homepage = "https://onlineradiobox.com/by/melodiiveka/"; break;
-        case 6 : homepage = "https://onlineradiobox.com/by/radiorelax/"; break;
-        case 7 : homepage = "https://onlineradiobox.com/by/dushevnoeradio/"; break;
-        case 8 : homepage = "https://onlineradiobox.com/by/radiys/"; break;
-        case 9 : homepage = "https://onlineradiobox.com/by/radioba/"; break;
-        case 10 : homepage = "https://onlineradiobox.com/by/legendy/"; break;
-        case 11 : homepage = "https://onlineradiobox.com/by/wgfm/"; break;
-        case 12 : homepage = "https://onlineradiobox.com/by/avtoradio/"; break;
-        case 13 : homepage = "https://onlineradiobox.com/by/narodnoeradio/"; break;
-        case 14 : homepage = "https://onlineradiobox.com/by/humorfm/"; break;
-        case 15 : homepage = "https://onlineradiobox.com/by/v4you/"; break;
-        case 16 : homepage = "https://onlineradiobox.com/by/pilotfm/"; break;
-        case 17 : homepage = "https://onlineradiobox.com/by/aplus/"; break;
+        case 3 : _homepage = "https://onlineradiobox.com/by/energyfm/"; break;
+        case 5 : _homepage = "https://onlineradiobox.com/by/melodiiveka/"; break;
+        case 6 : _homepage = "https://onlineradiobox.com/by/radiorelax/"; break;
+        case 7 : _homepage = "https://onlineradiobox.com/by/dushevnoeradio/"; break;
+        case 8 : _homepage = "https://onlineradiobox.com/by/radiys/"; break;
+        case 9 : _homepage = "https://onlineradiobox.com/by/radioba/"; break;
+        case 10 : _homepage = "https://onlineradiobox.com/by/legendy/"; break;
+        case 11 : _homepage = "https://onlineradiobox.com/by/wgfm/"; break;
+        case 12 : _homepage = "https://onlineradiobox.com/by/avtoradio/"; break;
+        case 13 : _homepage = "https://onlineradiobox.com/by/narodnoeradio/"; break;
+        case 14 : _homepage = "https://onlineradiobox.com/by/humorfm/"; break;
+        case 15 : _homepage = "https://onlineradiobox.com/by/v4you/"; break;
+        case 16 : _homepage = "https://onlineradiobox.com/by/pilotfm/"; break;
+        case 17 : _homepage = "https://onlineradiobox.com/by/aplus/"; break;
         //18
-        case 19 : homepage = "https://onlineradiobox.com/by/s13ru/"; break;
-        case 20 : homepage = "https://onlineradiobox.com/by/radiobrest/"; break;
+        case 19 : _homepage = "https://onlineradiobox.com/by/s13ru/"; break;
+        case 20 : _homepage = "https://onlineradiobox.com/by/radiobrest/"; break;
         default:  break;
     }
-    urlUser = homepage + "playlist/";
+    _urlUser = _homepage + "playlist/";
     work();
 }
 
 void AppCoreDim::picReplyFinished()
 {
-    QString temp = pic1;
+    QString temp = _pic1;
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     if (reply->error() == QNetworkReply::NoError)
     {
         QByteArray content= reply->readAll();
-        pic1 = content.data();
+        _pic1 = content.data();
         QRegExp rgx("(avatars.yandex.net\\/get-music-content.\\w*.\\w*.a.\\w*.\\w*)\\/%");
-        rgx.indexIn(pic1);
-        pic1 = rgx.cap(1);
-        pic1 = "https://" + pic1.left(song.indexOf("/%")) + "/1000x1000";
+        rgx.indexIn(_pic1);
+        _pic1 = rgx.cap(1);
+        _pic1 = "https://" + _pic1.left(_song.indexOf("/%")) + "/1000x1000";
     }
-    if (temp != pic1)
-        emit sendToQml_pic(pic1);
+    if (temp != _pic1)
+        emit sendToQml_pic(_pic1);
     reply->deleteLater();
 }

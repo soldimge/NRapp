@@ -15,9 +15,9 @@ int main(int argc, char *argv[])
     qputenv("QT_QUICK_CONTROLS_STYLE", "material");
     KeepAwake lock;
 
-    app.setOrganizationName("Belarus radio");
+    app.setOrganizationName("Belarus Radio");
     app.setOrganizationDomain("soldimge@gmail.com");
-    app.setApplicationName("Belarus radio");
+    app.setApplicationName("Belarus Radio");
 
     QtAndroidTools::initializeQmlTools();
 

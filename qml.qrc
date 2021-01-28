@@ -2,11 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>HomePage.qml</file>
-        <file>qtquickcontrols2.conf</file>
-        <file>images/fb.png</file>
-        <file>images/instagram.png</file>
-        <file>images/viber.png</file>
-        <file>images/vk.png</file>
         <file>images/logo.png</file>
+        <file>images/menu.png</file>
     </qresource>
 </RCC>

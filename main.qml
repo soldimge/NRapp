@@ -26,7 +26,6 @@ ApplicationWindow {
     Material.theme: Material.Dark
 
     onIsDarkThemeChanged: {
-//        console.log(isDarkTheme)
         if(isDarkTheme == true) {
             Material.background = "#121c2f"
             Material.foreground = "#d7d6d5"
@@ -137,9 +136,10 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.rightMargin: 10
                     orientation: Qt.Horizontal
-                    value: 1
+                    value: audioPlayer.volume
                     stepSize : 0.01
                     snapMode : Slider.SnapAlways
+                    onValueChanged: audioPlayer.volume = volumeSlider.value
                 }
                 }
             height: col.height
@@ -149,7 +149,7 @@ ApplicationWindow {
             onClicked: Qt.openUrlExternally(hp)
         }
         MenuItem {
-            text: isDarkTheme == true ? qsTr("Light theme") : qsTr("Standard theme")
+            text: isDarkTheme == true ? qsTr("Светлая тема") : qsTr("Стандартная тема")
             onTriggered: {
                 isDarkTheme = (isDarkTheme == true) ? false : true
             }
@@ -179,7 +179,7 @@ ApplicationWindow {
             states: [
                     State { name: "http://live.novoeradio.by:8000/novoeradio-128k" },
                     State { name: "https://advertizer.hoster.by/unistar/unistar-128kb/icecast.audio" },
-                    State { name: "https://stream.hoster.by/rusradio/russkoe/icecast.audio?magic=true" }, //
+                    State { name: "http://live.rusradio.by:8000/live" }, //
                     State { name: "https://stream2.datacenter.by/energy" },
                     State { name: "http://de.streams.radioplayer.by:8000/live" }, //
                     State { name: "http://93.84.112.253:8010/MV128" },
@@ -190,13 +190,13 @@ ApplicationWindow {
                     State { name: "http://live.legendy.by:8000/legendyfm" },
                     State { name: "https://sv.wargaming.fm/1/128" },
                     State { name: "http://live.humorfm.by:8000/avtoradio" },
-                    State { name: "https://live.novoeradio.by:444/live/narodnoeradio_aac128/icecast.audio" }, //
+                    State { name: "http://live.novoeradio.by:8000/narodnoe-radio-128k" },
                     State { name: "http://live.humorfm.by:8000/veseloe" },
                     State { name: "https://a1.radioheart.ru:9003/RH17982" },
-                    State { name: "https://stream.hoster.by/pilotfm/pilot/icecast.audio" }, //
+                    State { name: "http://pf.volna.top/PilotBy128" }, //
                     State { name: "https://s.aplus.fm/aplus_128" },
-                    State { name: "https://stream.hoster.by/ont/centerfm/icecast.audio" },
-                    State { name: "https://c28.radioboss.fm:18099/stream" },
+                    State { name: "https://stream.hoster.by/ont/centerfm/icecast.audio" }, //
+                    State { name: "https://c28.radioboss.fm:18099/stream" }, //
                     State { name: "http://93.84.112.253:8039/stream" }
                 ]
 
